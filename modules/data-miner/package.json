@@ -1,0 +1,15 @@
+{
+  "name": "data-miner",
+  "version": "0.0.1",
+  "description": "This Module take the datas from the online sources of the university, courses and teachers. Serve the data in JSON via API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dataminer",
+    "crawler"
+  ],
+  "author": "Lorenzo Pizzari <pizzari@lugroma3.org>",
+  "license": "ISC"
+}

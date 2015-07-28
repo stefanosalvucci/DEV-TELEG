@@ -1,0 +1,15 @@
+{
+  "name": "user-manager",
+  "version": "0.0.1",
+  "description": "This Module manage the users",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dataminer",
+    "crawler"
+  ],
+  "author": "Lorenzo Pizzari <pizzari@lugroma3.org>",
+  "license": "ISC"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "orari-roma3",
+  "version": "0.0.1",
+  "description": "This module fetch data from orari.uniroma3.it in XML and return it converted in JSON",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dataminer",
+    "crawler"
+  ],
+  "author": "Lorenzo Pizzari <pizzari@lugroma3.org>",
+  "license": "ISC"
+}
