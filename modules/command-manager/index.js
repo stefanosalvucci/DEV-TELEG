@@ -1,1 +1,2 @@
-module.exports = require('./src/commandManager');
+require('./commands');
+module.exports = require('./commandManager');
