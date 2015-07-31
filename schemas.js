@@ -3,7 +3,7 @@ var schemas = {
         id : null,
         facolta: null,
         corsoLaurea: null,
-        corso: null, //denominazione
+        denominazione: null,
         docente: null,
         aula: null,
         giorno: null,
@@ -30,7 +30,7 @@ var schemas = {
     },
     utente: {
         id: null,
-        id_telegram: null,
+        telegramId: null,
         facolta: null,
         corsoLaurea: null,
         corsiSeguiti: null, // array di corsi
