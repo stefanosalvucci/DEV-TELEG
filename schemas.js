@@ -1,6 +1,5 @@
 var schemas = {
     lezione : {
-        id : null,
         facolta: null,
         corsoLaurea: null,
         denominazione: null,
@@ -16,20 +15,19 @@ var schemas = {
      * E così via fino agli avvisi del singolo docente.
      */
     avviso: {
-        id: null,
         facolta: null,
         corsoLaurea: null,
         corso: null,
         docente: null,
-        testo: null
+        testo: null,
+        titolo: null,
+        url: null
     },
     aula: {
-        id: null,
         nome: null,
         capacita: null
     },
     utente: {
-        id: null,
         telegramId: null,
         facolta: null,
         corsoLaurea: null,
