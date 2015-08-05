@@ -11,5 +11,11 @@
     "crawler"
   ],
   "author": "Lorenzo Pizzari <pizzari@lugroma3.org>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "async": "^1.4.0",
+    "mongodb": "^2.0.39",
+    "request": "^2.60.0",
+    "xml2js": "^0.4.9"
+  }
 }
