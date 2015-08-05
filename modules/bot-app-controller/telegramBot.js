@@ -1,5 +1,5 @@
 var config = require('../../config.json');
-var token = config["TelegramToken"];
+var token = config["telegramToken"];
 
 var TelegramBot = require('node-telegram-bot-api');
 
