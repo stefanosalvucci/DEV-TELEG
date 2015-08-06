@@ -46,7 +46,7 @@ var fetchOrari = function (fromDate, toDate, cb) {
         }).on('end', function () {
             parser.parseString(output);
         });
-    }).on('error', function (e) {
+    })  .on('error', function (e) {
         cb(new Error(e));
     });
 };

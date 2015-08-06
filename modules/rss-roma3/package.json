@@ -1,14 +1,13 @@
 {
-  "name": "data-miner",
+  "name": "rss-roma3",
   "version": "0.0.1",
-  "description": "This Module take the datas from the online sources of the university, courses and teachers. Serve the data in JSON via API",
+  "description": "Thi module write the RSS news into DB",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "dataminer",
-    "crawler"
+    "rss"
   ],
   "author": "Lorenzo Pizzari <pizzari@lugroma3.org>",
   "license": "ISC"
