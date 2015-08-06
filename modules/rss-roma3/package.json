@@ -1,6 +1,6 @@
 {
   "name": "rss-roma3",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "description": "Thi module write the RSS news into DB",
   "main": "index.js",
   "scripts": {

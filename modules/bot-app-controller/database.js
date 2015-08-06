@@ -20,5 +20,19 @@ module.exports = {
         else {
             cb(db)
         }
+    },
+    /**
+     * Foreach news insert if not exists else update if necessary
+     * @param {Array} news
+     */
+    updateNews : function (news) {
+        this.getDbConnection(function (db) {
+            var collection = db.collection('news');
+            for(var i = 0; i < news.length; i++){
+                collection.update({
+                    titolo: news[i].titolo
+                },news[i],{upsert: true});
+            }
+        })
     }
 };
