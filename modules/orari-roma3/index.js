@@ -6,6 +6,8 @@ var database = require('../bot-app-controller/database');
 var ORARI_COLLECTION = 'orari';
 var AULE_COLLECTION = 'aule';
 
+var todayDate = new Date(2015, 5, 10, 11, 5); // Try: new Date(2015, 5, 10, 11, 5);
+
 var OrariRomaTre = function () {
 };
 
@@ -13,7 +15,7 @@ var OrariRomaTre = function () {
  * Update the local database with data fetched from orari.uniroma3.it/ing/esporta.php
  */
 OrariRomaTre.prototype.updateDb = function () {
-    fetchOrari(new Date(), new Date(Date.now() + 86400000), function (err, object) {
+    fetchOrari(todayDate, new Date(todayDate.getTime() + 86400000), function (err, object) {
         if (err) throw err;
         database.getDbConnection(function (db) {
             var facolta = object['facolta'];
@@ -46,7 +48,7 @@ var fetchOrari = function (fromDate, toDate, cb) {
         }).on('end', function () {
             parser.parseString(output);
         });
-    })  .on('error', function (e) {
+    }).on('error', function (e) {
         cb(new Error(e));
     });
 };
@@ -109,22 +111,41 @@ function updateAule(facolta, collection) {
     }
 }
 
-OrariRomaTre.prototype.getAuleLibere = function () { // TODO non funziona nulla
+OrariRomaTre.prototype.getAuleLibere = function (done) {
     database.getDbConnection(function (db) {
-        var collection = db.collection(ORARI_COLLECTION);
-        var aulePiene = collection.find({
-            dateInizio: {$lte: new Date()},
-            dateFine: {$gte: new Date()}
-        }).map(function (item) {
-            return item.aula;
-        });
-        console.log(aulePiene);
+        var auleObj = {};
+        var auleArr = [];
+        db.collection(ORARI_COLLECTION).find({
+            dateFine: {$gte: todayDate}
+        }, {
+            aula: 1,
+            _id: 0,
+            dateInizio: 1,
+            dateFine: 1
+        }).forEach(
+            function (item) {
+                if (item.dateInizio < todayDate && item.dateFine > todayDate) {
+                    auleObj[item.aula] = -1
+                } else {
+                    if (typeof auleObj[item.aula] === 'undefined') auleObj[item.aula] = item.dateInizio;
+                    else if (auleObj[item.aula] > item.dateInizio && auleObj[item.aula] != -1) auleObj[item.aula] = item.dateInizio;
+                }
+            },
+            function (err) {
+                if (err) return done(err);
+                for (var aula in auleObj)
+                    if (auleObj[aula] != -1) auleArr.push({"aula": aula, "date": auleObj[aula]});
+                auleArr.sort(function (item1, item2) {
+                    return item2.date.getTime() - item1.date.getTime();
+                });
+                return done(null, auleArr);
+            });
     });
-
 };
 
 module.exports = new OrariRomaTre();
 
-// TODO these lines are only for test purpose! Run this script and not bin/www for development
 //module.exports.updateDb();
-module.exports.getAuleLibere();
+/*module.exports.getAuleLibere(function (err, a) {
+ console.log(a);
+ });*/

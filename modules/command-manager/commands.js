@@ -1,5 +1,6 @@
+var moment = require('moment');
 var commands = require('./commandManager');
-//var orari = require('../orari-roma3');
+var orari = require('../orari-roma3');
 
 commands.on('/start', function (msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, 'Che vuoi?');
@@ -12,8 +13,13 @@ commands.on('/help', function (msg, telegramBot) {
 });
 
 commands.on('/aulelibere', function (msg, telegramBot) {
-    //var aule = orari.getAuleLibere();
-    telegramBot.sendMessage(msg.chat.id, 'E che me lo invento?');
+    orari.getAuleLibere(function (err, aule) {
+        var message = 'Eccoti una lista delle aule libere (sperando non siano chiuse):';
+        aule.forEach(function (item) {
+            message += '\n - ' + item.aula + ' fino alle ' + moment(item.date).format('HH:mm');
+        });
+        telegramBot.sendMessage(msg.chat.id, message);
+    });
 });
 
 commands.on('/default', function (msg, telegramBot) {
