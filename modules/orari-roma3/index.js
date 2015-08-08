@@ -6,7 +6,7 @@ var database = require('../bot-app-controller/database');
 var ORARI_COLLECTION = 'orari';
 var AULE_COLLECTION = 'aule';
 
-var todayDate = new Date(2015, 5, 10, 11, 5); // Try: new Date(2015, 5, 10, 11, 5);
+var todayDate = new Date(); // Try: new Date(2015, 5, 10, 11, 5);
 
 var OrariRomaTre = function () {
 };
