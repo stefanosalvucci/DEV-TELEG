@@ -1,4 +1,8 @@
+var database = require('../bot-app-controller/database.js');
 var userManager = module.exports = {};
+
+var USER_COLLECTION = 'users';
+var NEWS_COLLECTION = 'news';
 
 /**
  * Access to Database and return the User Object if found else null
@@ -8,7 +12,23 @@ var userManager = module.exports = {};
  * @returns {*} User Object
  */
 userManager.getUserById = function (id,cb){
-  return null
+    // TODO
+    return null
+};
+
+/**
+ * Access to Database and return the User Object if found else nulls
+ *
+ * @param id of Telegram user
+ * @param cb callback function
+ * @returns {*} User Object
+ */
+userManager.getUserByTelegramId = function (id, cb){
+    database.getDbConnection(function (db) {
+        var collection = db.collection(USER_COLLECTION);
+        cb(collection.findOne({telegramId : id}));
+    });
+    return null
 };
 
 /**
@@ -19,7 +39,10 @@ userManager.getUserById = function (id,cb){
  * @returns {*} Array of User
  */
 userManager.getUserList = function (filters,cb) {
-    return null
+    database.getDbConnection(function (db) {
+        var collection = db.collection(USER_COLLECTION);
+        cb(collection.find(filters).toArray());
+    });
 };
 
 /**
@@ -27,8 +50,25 @@ userManager.getUserList = function (filters,cb) {
  *
  * @param user Object User
  * @param cb callback function
- * @returns {*} Error message | null
+ * @returns {*} Error message | write confirmation
  */
 userManager.newUser = function (user,cb) {
-    return null
+    database.getDbConnection(function (db) {
+        var collection = db.collection(USER_COLLECTION);
+        collection.insertOne(user, function (err, res) {
+            if (err) cb(new Error(err));
+            else cb(null,res);
+        });
+    })
+};
+
+/**
+ * Setup the database for the app
+ */
+userManager.setupDb = function () {
+    database.getDbConnection(function (db) {
+        db.createCollection(USER_COLLECTION);
+        db.createCollection(NEWS_COLLECTION);
+        // TODO Finish method
+    })
 };
