@@ -2,7 +2,6 @@ var database = require('../bot-app-controller/database.js');
 var userManager = module.exports = {};
 
 var USER_COLLECTION = 'users';
-var NEWS_COLLECTION = 'news';
 
 /**
  * Access to Database and return the User Object if found else null
@@ -59,16 +58,5 @@ userManager.newUser = function (user,cb) {
             if (err) cb(new Error(err));
             else cb(null,res);
         });
-    })
-};
-
-/**
- * Setup the database for the app
- */
-userManager.setupDb = function () {
-    database.getDbConnection(function (db) {
-        db.createCollection(USER_COLLECTION);
-        db.createCollection(NEWS_COLLECTION);
-        // TODO Finish method
     })
 };
