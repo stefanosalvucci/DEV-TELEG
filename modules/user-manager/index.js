@@ -1,4 +1,4 @@
-var database = require('../bot-app-controller/database.js');
+var database = require('../database');
 var userManager = module.exports = {};
 
 var USER_COLLECTION = 'users';

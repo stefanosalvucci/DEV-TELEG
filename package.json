@@ -17,6 +17,7 @@
     "node-schedule": "~0.2.9",
     "xml2js": "~0.4.9",
     "mongodb": "~2.0",
-    "moment": "~2.10.6"
+    "moment": "~2.10.6",
+    "es6-promise": "~3.0.2"
   }
 }

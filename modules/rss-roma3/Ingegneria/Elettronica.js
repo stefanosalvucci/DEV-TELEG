@@ -1,5 +1,5 @@
 var RSS = require('../RSS');
-var database = require('../../bot-app-controller/database');
+var database = require('../../database');
 
 var Elettronica = function () {};
 
