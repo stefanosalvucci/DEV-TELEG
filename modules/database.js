@@ -29,7 +29,7 @@ module.exports = {
             MongoClient.connect(mongoDbUrl, {promiseLibrary: Promise}, function (err, database) {
                 if (err) return reject(err);
                 db = database;
-                console.log("Db connected");
+                console.log('Db connected');
                 resolve(db);
             });
         });
