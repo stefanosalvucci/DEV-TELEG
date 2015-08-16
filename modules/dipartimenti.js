@@ -26,12 +26,10 @@ module.exports = {
         id: 7
     },
     SCIENZE: {
-        id: 8,
-        orariKey: 'smfn'
+        id: 8
     },
     SCIENZE_FORMAZIONE: {
-        id: 9,
-        orariKey: 'formazione'
+        id: 9
     },
     SCIENZE_POLITICHE: {
         id: 10,

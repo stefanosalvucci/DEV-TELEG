@@ -1,6 +1,7 @@
 var moment = require('moment');
 var commands = require('./commandManager');
 var orari = require('../orari-roma3');
+var dipartimenti = require('../dipartimenti');
 
 var handleError = function (err, msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, "Si è verificato un errore, verrà risolto al più presto");
@@ -18,7 +19,7 @@ commands.on('/help', function (msg, telegramBot) {
 });
 
 commands.on('/aulelibere', function (msg, telegramBot) {
-    orari.getAuleLibere().then(function (aule) {
+    orari.getAuleLibere(dipartimenti.INGEGNERIA).then(function (aule) {
         var message = 'Eccoti una lista delle aule libere (sperando non siano chiuse):';
         aule.forEach(function (item) {
             message += '\n - ' + item.aula;

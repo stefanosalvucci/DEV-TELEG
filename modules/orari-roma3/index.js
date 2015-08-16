@@ -2,11 +2,12 @@ var xml2js = require('xml2js');
 var util = require('util');
 var http = require('http');
 var db = require('../database').db;
+var dipartimenti = require('../dipartimenti');
 
 var ORARI_COLLECTION = 'orari';
 var AULE_COLLECTION = 'aule';
 
-var todayDate = new Date(2015, 5, 16, 11, 5);
+var todayDate = new Date(2015, 5, 16, 11, 5); // TODO Today date
 
 var OrariRomaTre = function () {
 };
@@ -16,19 +17,26 @@ var OrariRomaTre = function () {
  */
 OrariRomaTre.prototype.updateDb = function () {
     return new Promise(function (resolve, reject) {
-        fetchOrari('ing', todayDate, new Date(todayDate.getTime() + 86400000)).then(function (object) {
-            var facolta = object['facolta'];
-            Promise.all([updateAule(facolta), updateOrari(facolta)]).then(function (values) {
-                console.log('Db Updated');
-                resolve(values);
-            }).catch(reject);
-        }).catch(reject);
+        var promises = [];
+        Object.keys(dipartimenti).forEach(function (key) {
+            var dipartimento = dipartimenti[key];
+            if (typeof dipartimento.orariKey !== 'undefined')
+                promises.push(updateDipartimentoDb(dipartimento));
+        });
+        Promise.all(promises).then(function (values) {
+            console.log('Db Updated');
+            resolve(values);
+        }).catch(function (err) {
+            console.error(err.message);
+            console.error(err.stack);
+            reject(err);
+        });
     });
 };
 
 /**
- *
- * @param dipartimento {string}
+ * Preleva gli orari da orari.uniroma3.it
+ * @param dipartimento {object}
  * @param fromDate {Date}
  * @param toDate {Date}
  * @return {Promise}
@@ -44,7 +52,7 @@ var fetchOrari = function (dipartimento, fromDate, toDate) {
 
         var url = util.format(
             "http://orari.uniroma3.it/%s/esporta.php?from_Month=%d&from_Day=%d&from_Year=%d" +
-            "&to_Month=%d&to_Day=%d&to_Year=%d&export_type=xml&save_entry=Esporta+calendario", dipartimento
+            "&to_Month=%d&to_Day=%d&to_Year=%d&export_type=xml&save_entry=Esporta+calendario", dipartimento.orariKey
             , fromDate.getMonth() + 1, fromDate.getDate(), fromDate.getFullYear()
             , toDate.getMonth() + 1, toDate.getDate(), toDate.getFullYear()
         );
@@ -60,13 +68,17 @@ var fetchOrari = function (dipartimento, fromDate, toDate) {
 };
 
 /**
+ * Aggiorna il database degli orari
  * @param {object} facolta
+ * @param {object} dipartimento
  * @return {Promise}
  */
-function updateOrari(facolta) {
+function updateOrari(facolta, dipartimento) {
     return new Promise(function (resolve, reject) {
 
-        db.collection(ORARI_COLLECTION).deleteMany({}).then(function () {
+        db.collection(ORARI_COLLECTION).deleteMany({
+            dipartimento: dipartimento.id
+        }).then(function () {
             var lezioni = facolta['corsoLaurea'];
             var promises = [];
             for (var i = 0; i < lezioni.length; i++) {
@@ -92,7 +104,7 @@ function updateOrari(facolta) {
                         promises.push(
                             db.collection(ORARI_COLLECTION)
                                 .insertOne({
-                                    facolta: 'Ingegneria',
+                                    dipartimento: dipartimento.id,
                                     corsoLaurea: corsoLaurea,
                                     denominazione: denominazione,
                                     dettagli: dettagli,
@@ -115,12 +127,16 @@ function updateOrari(facolta) {
 }
 
 /**
+ * Aggiorna il database delle aule
  * @param {object} facolta
+ * @param {object} dipartimento
  * @return {Promise}
  */
-function updateAule(facolta) {
+function updateAule(facolta, dipartimento) {
     return new Promise(function (resolve, reject) {
-        db.collection(AULE_COLLECTION).deleteMany({}).then(function () {
+        db.collection(AULE_COLLECTION).deleteMany({
+            dipartimento: dipartimento.id
+        }).then(function () {
             var promises = [];
             var listaAule = facolta['listaAuleAsservite'][0]; // Array associativi: aula + capacita
             var aule = listaAule['aula'];
@@ -129,6 +145,7 @@ function updateAule(facolta) {
                 var aula = aule[i];
                 var capacita = capacitas[i];
                 promises.push(db.collection(AULE_COLLECTION).insertOne({
+                    dipartimento: dipartimento.id,
                     nome: aula,
                     capacita: capacita
                 }));
@@ -141,14 +158,32 @@ function updateAule(facolta) {
 }
 
 /**
+ * Aggiorna il database degli orari del dipartimento
+ * @param {object} dipartimento
+ * @returns {Promise}
+ */
+var updateDipartimentoDb = function (dipartimento) {
+    return new Promise(function (resolve, reject) {
+        fetchOrari(dipartimento, todayDate, new Date(todayDate.getTime() + 86400000)).then(function (object) {
+            var facolta = object['facolta'];
+            Promise.all([updateAule(facolta, dipartimento), updateOrari(facolta, dipartimento)])
+                .then(resolve).catch(reject);
+        }).catch(reject);
+    });
+};
+
+/**
+ * Ritorna una lista di aule libere
+ * @params {object} dipartimento
  * @return {Promise}
  */
-OrariRomaTre.prototype.getAuleLibere = function () {
+OrariRomaTre.prototype.getAuleLibere = function (dipartimento) {
     return new Promise(function (resolve, reject) {
         var auleObj = {};
         var auleArr = [];
         db.collection(ORARI_COLLECTION).find({
-            dateFine: {$gte: todayDate}
+            dateFine: {$gte: todayDate},
+            dipartimento: dipartimento.id
         }, {
             _id: 0,
             aula: 1,
@@ -177,7 +212,5 @@ OrariRomaTre.prototype.getAuleLibere = function () {
 
 module.exports = new OrariRomaTre();
 
+// TODO scheduling
 module.exports.updateDb();
-/*module.exports.getAuleLibere(function (err, a) {
- console.log(a);
- });*/
