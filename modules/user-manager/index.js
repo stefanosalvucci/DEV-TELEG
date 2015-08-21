@@ -1,62 +1,44 @@
-var database = require('../database');
+var database = require('../database').db;
 var userManager = module.exports = {};
 
-var USER_COLLECTION = 'users';
+var COLLECTION = database.collection('users');
 
 /**
  * Access to Database and return the User Object if found else null
  *
  * @param id of the user
- * @param cb callback function
- * @returns {*} User Object
+ * @returns {Promise}
  */
-userManager.getUserById = function (id,cb){
-    // TODO
-    return null
+userManager.getUserById = function (id) {
+    return COLLECTION.findOne({_id: id});
 };
 
 /**
  * Access to Database and return the User Object if found else nulls
  *
  * @param id of Telegram user
- * @param cb callback function
- * @returns {*} User Object
+ * @returns {Promise}
  */
-userManager.getUserByTelegramId = function (id, cb){
-    database.getDbConnection(function (db) {
-        var collection = db.collection(USER_COLLECTION);
-        cb(collection.findOne({telegramId : id}));
-    });
-    return null
+userManager.getUserByTelegramId = function (id) {
+    return COLLECTION.findOne({telegramId: id})
 };
 
 /**
  * This function searches in all users and returns only the items that match the filters
  *
  * @param filters array {filter_key: filter_value} i.e. { 'gender' : 'male', 'year' : '1'}
- * @param cb callback function
- * @returns {*} Array of User
+ * @returns {Promise}
  */
-userManager.getUserList = function (filters,cb) {
-    database.getDbConnection(function (db) {
-        var collection = db.collection(USER_COLLECTION);
-        cb(collection.find(filters).toArray());
-    });
+userManager.getUserList = function (filters) {
+    return collection.find(filters).toArray();
 };
 
 /**
  *  Add new user in Database
  *
  * @param user Object User
- * @param cb callback function
- * @returns {*} Error message | write confirmation
+ * @returns {Promise}
  */
-userManager.newUser = function (user,cb) {
-    database.getDbConnection(function (db) {
-        var collection = db.collection(USER_COLLECTION);
-        collection.insertOne(user, function (err, res) {
-            if (err) cb(new Error(err));
-            else cb(null,res);
-        });
-    })
+userManager.newUser = function (user) {
+    return COLLECTION.insertOne(user);
 };

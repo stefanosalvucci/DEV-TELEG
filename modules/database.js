@@ -38,16 +38,23 @@ module.exports = {
     /**
      * Foreach news insert if not exists else update if necessary
      * @param {Array} news
-     * TODO return Promise
+     * @returns {Promise}
      */
     updateNews: function (news) {
-        this.getDbConnection(function (db) {
+        return new Promise(function (resolve, reject) {
             var collection = db.collection('news');
-            for (var i = 0; i < news.length; i++) {
-                collection.update({
-                    titolo: news[i].titolo
-                }, news[i], {upsert: true});
-            }
-        })
+            var promises = [];
+            news.forEach(function (element) {
+                promises.push(collection.updateOne({titolo: element.titolo}, element, {upsert: true}));
+            });
+            Promise.all(promises).then(function (values) {
+                console.log('[NEWS] Database updated');
+                resolve(values);
+            }).catch(function (error) {
+                reject(error);
+            });
+        });
+
+
     }
 };

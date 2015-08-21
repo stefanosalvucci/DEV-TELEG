@@ -1,4 +1,7 @@
 module.exports = {
+    TUTTI: {
+        id: 0
+    },
     ARCHITETTURA: {
         id: 1,
         orariKey: 'arch'
@@ -16,7 +19,8 @@ module.exports = {
     },
     INGEGNERIA: {
         id: 5,
-        orariKey: 'ing'
+        orariKey: 'ing',
+        corsiDiLaurea: ['tutti', 'informatica', 'elettronica', 'meccanica', 'civile']
     },
     LINGUE: {
         id: 6,

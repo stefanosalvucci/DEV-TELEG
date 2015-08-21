@@ -7,25 +7,26 @@ var Facolta = function () {};
  */
 Facolta.prototype.updateDb = function () {
     var url = 'http://www.ingegneria.uniroma3.it/?feed=rss2';
-    RSS.fetch(url, function (err, rssObj) {
-        if(err) throw err;
-
+    RSS.get(url).then(function (rssObj) {
         var updates = rssObj['rss']['channel'][0]['item'];
         var avvisi = [];
 
         for(var i = 0; i < updates.length; i++){
             avvisi.push({
-                facolta: 'Dipartimento di Ingegneria',
-                corsoLaurea: 'all',
-                corso: 'all',
-                docente: 'all',
+                facolta: 5,
+                corsoLaurea: 0,
+                corso: 0,
+                docente: 0,
                 testo: updates[i]['description'][0],
                 titolo: updates[i]['title'][0],
                 url: updates[i]['link'][0]
             });
         }
         database.updateNews(avvisi);
-    });
+    })
+        .catch(function (err) {
+            throw err;
+        });
 };
 
 module.exports = new Facolta();
