@@ -4,7 +4,7 @@ require('es6-promise').polyfill(); // EcmaScript6 Promise compatibility for old 
 var database = require('../modules/database');
 
 database.connect().then(function (db) {
-    require('../modules/bot-app-controller');
+    require('../bot-app');
 }).catch(function (err) {
     throw err
 });

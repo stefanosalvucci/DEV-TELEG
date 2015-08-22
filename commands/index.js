@@ -1,7 +1,7 @@
 var moment = require('moment');
-var commands = require('./commandManager');
-var orari = require('../orari-roma3');
-var dipartimenti = require('../dipartimenti');
+var commands = require('../modules/command-manager');
+var orari = require('../modules/orari-roma3');
+var dipartimenti = require('../modules/dipartimenti');
 
 var handleError = function (err, msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, "Si è verificato un errore, verrà risolto al più presto");
@@ -30,6 +30,19 @@ commands.on('/aulelibere', function (msg, telegramBot) {
     }).catch(function (err) {
         handleError(err, msg, telegramBot);
     });
+});
+
+commands.on('/lezioni', function (msg, telegramBot) {
+    telegramBot.sendMessage(msg.chat.id, 'Mi dispiace, ma gli scansafatiche del LUG Roma 3 ancora non mi hanno' +
+        ' insegnato come scrivere le lezioni odierne!');
+});
+
+commands.on('/cometichiami', function (msg, telegramBot) {
+    telegramBot.sendMessage(msg.chat.id, 'Mi chiamo LUG Roma 3 Bot!');
+});
+
+commands.on('/grazie', function (msg, telegramBot) {
+    telegramBot.sendMessage(msg.chat.id, 'Prego!');
 });
 
 commands.on('/default', function (msg, telegramBot) {
