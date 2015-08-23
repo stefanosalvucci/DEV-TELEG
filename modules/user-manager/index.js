@@ -1,44 +1,71 @@
 var database = require('../database').db;
-var userManager = module.exports = {};
 
-var COLLECTION = database.collection('users');
+var User = function (telegramId) {
+    this.telegramId = telegramId;
+    this.collection = database.collection('users');
+};
+
+
+User.prototype.getDipartimento = function () {
+    this.getUser().then(function (user) {
+        if (!user.dipartimentoId) {
+            // TODO Use User Middleware to get user dipartimentoId (ask for it)
+        }
+        return Promise.resolve(user.dipartimentoId);
+    }).catch(function (err) {
+        console.error(err);
+    });
+};
 
 /**
  * Access to Database and return the User Object if found else null
  *
- * @param id of the user
+ * @param {number} id of the user
  * @returns {Promise}
  */
-userManager.getUserById = function (id) {
-    return COLLECTION.findOne({_id: id});
+/*User.prototype.getUserById = function (id) {
+ return this.collection.findOne({_id: id});
+ };*/
+
+/**
+ * Access to Database and return the User Object or create it
+ *
+ * @returns {Promise}
+ */
+User.prototype.getUser = function () {
+    var collection = this.collection;
+    var telegramId = this.telegramId;
+    return collection.findOne({telegramId: telegramId}).then(function (user) {
+        if (user == null) {
+            return collection.insertOne({
+                telegramId: telegramId
+            });
+        }
+        return Promise.resolve(user);
+    });
 };
 
 /**
- * Access to Database and return the User Object if found else nulls
+ * This function searches in all users and returns only the items that match the query
  *
- * @param id of Telegram user
- * @returns {Promise}
+ * @param {object} query The cursor query object.
+ * @returns {Cursor}
  */
-userManager.getUserByTelegramId = function (id) {
-    return COLLECTION.findOne({telegramId: id})
-};
-
-/**
- * This function searches in all users and returns only the items that match the filters
- *
- * @param filters array {filter_key: filter_value} i.e. { 'gender' : 'male', 'year' : '1'}
- * @returns {Promise}
- */
-userManager.getUserList = function (filters) {
-    return collection.find(filters).toArray();
-};
+/*User.prototype.getUserList = function (query) {
+ return this.collection.find(query);
+ };*/
 
 /**
  *  Add new user in Database
  *
- * @param user Object User
+ * @param {object} user Object User
  * @returns {Promise}
  */
-userManager.newUser = function (user) {
-    return COLLECTION.insertOne(user);
+/*User.prototype.newUser = function (user) {
+ return this.collection.insertOne(user);
+ };*/
+
+module.exports = {
+    User: User,
+    Middleware: null
 };

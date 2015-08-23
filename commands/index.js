@@ -2,6 +2,7 @@ var moment = require('moment');
 var commands = require('../modules/command-manager');
 var orari = require('../modules/orari-roma3');
 var dipartimenti = require('../modules/dipartimenti');
+var User = require('../modules/user-manager').User;
 
 var handleError = function (err, msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, "Si è verificato un errore, verrà risolto al più presto");
@@ -19,7 +20,10 @@ commands.on('/help', function (msg, telegramBot) {
 });
 
 commands.on('/aulelibere', function (msg, telegramBot) {
-    orari.getAuleLibere(dipartimenti.INGEGNERIA).then(function (aule) {
+    var user = new User(msg.from.id);
+    user.getDipartimento().then(function (dipartimento) {
+        return orari.getAuleLibere(dipartimenti.INGEGNERIA);
+    }).then(function (aule) {
         var message = 'Eccoti una lista delle aule libere (sperando non siano chiuse):';
         aule.forEach(function (item) {
             message += '\n - ' + item.aula;
@@ -43,6 +47,13 @@ commands.on('/cometichiami', function (msg, telegramBot) {
 
 commands.on('/grazie', function (msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, 'Prego!');
+});
+
+// TODO Access this command only in debug mode
+commands.on('/debug', function (msg, telegramBot) {
+    console.log(msg);
+    var user = new User(msg.from.id);
+    user.getDipartimento();
 });
 
 commands.on('/default', function (msg, telegramBot) {
