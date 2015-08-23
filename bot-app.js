@@ -1,5 +1,5 @@
 var commandManager = require('./modules/command-manager');
-var telegramBot = require('./modules/telegramBot');
+var telegramBot = require('./modules/telegram-bot');
 var genius = require('./modules/genius');
 
 require('./commands');
