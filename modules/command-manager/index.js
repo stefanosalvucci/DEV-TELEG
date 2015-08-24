@@ -1,11 +1,7 @@
 var CommandManager = function () {
     this.commands = {};
 
-    this.middlewares = [
-        function (msg, telegramBot) {
-            this.commands['/default'](msg, telegramBot);
-        }.bind(this)
-    ];
+    this.middlewares = [];
 };
 
 /**
@@ -19,7 +15,7 @@ CommandManager.prototype.on = function (message, cb) {
 
 /**
  * Add a middleware
- * @param cb
+ * @param middleware
  */
 CommandManager.prototype.use = function (middleware) {
     this.middlewares.push(middleware);
@@ -37,9 +33,8 @@ CommandManager.prototype.handleMessage = function (msg, telegramBot) {
         return cb(msg, telegramBot);
     }
 
-    var i = this.middlewares.length - 1;
-    var middleware = this.middlewares[i];
-    middleware(msg, telegramBot, this.getNext(msg, telegramBot, i));
+    var middleware = this.middlewares[0];
+    middleware(msg, telegramBot, this.getNext(msg, telegramBot, 0));
 };
 
 
@@ -52,7 +47,7 @@ CommandManager.prototype.handleMessage = function (msg, telegramBot) {
  */
 CommandManager.prototype.getNext = function (msg, telegramBot, index) {
     return function () {
-        this.middlewares[index - 1](msg, telegramBot, this.getNext(msg, telegramBot, index - 1));
+        this.middlewares[index + 1](msg, telegramBot, this.getNext(msg, telegramBot, index + 1));
     }.bind(this);
 };
 

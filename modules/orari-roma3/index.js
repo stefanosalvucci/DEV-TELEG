@@ -213,4 +213,4 @@ OrariRomaTre.prototype.getAuleLibere = function (dipartimento) {
 module.exports = new OrariRomaTre();
 
 // TODO scheduling
-module.exports.updateDb();
+//module.exports.updateDb();

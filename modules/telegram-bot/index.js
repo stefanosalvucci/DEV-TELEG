@@ -8,6 +8,9 @@ TelegramBot.prototype.attachCommandManager = function (commandManager) {
         logger.log(msg.chat.id, msg.text, false); // Log message
         commandManager.handleMessage(msg, telegramBot)
     });
+    this.on('error', function eventEmitterCallback(err) {
+        console.error(err.stack);
+    });
 };
 
 TelegramBot.prototype.sendMessage = (function (superSendMessage) {
@@ -17,5 +20,11 @@ TelegramBot.prototype.sendMessage = (function (superSendMessage) {
     }
 })(TelegramBot.prototype.sendMessage); // Log message
 
-var telegramBot = new TelegramBot(token, {polling: true});
+var telegramBot = new TelegramBot(token, {
+    polling: {
+        timeout: 2,
+        interval: 2000
+    }
+});
+
 module.exports = telegramBot;

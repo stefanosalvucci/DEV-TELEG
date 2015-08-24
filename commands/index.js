@@ -6,7 +6,7 @@ var User = require('../modules/user-manager').User;
 
 var handleError = function (err, msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, "Si è verificato un errore, verrà risolto al più presto");
-    console.log(err);
+    console.error(err.stack);
 };
 
 commands.on('/start', function (msg, telegramBot) {
@@ -20,9 +20,9 @@ commands.on('/help', function (msg, telegramBot) {
 });
 
 commands.on('/aulelibere', function (msg, telegramBot) {
-    var user = new User(msg.from.id);
-    user.getDipartimento().then(function (dipartimento) {
-        return orari.getAuleLibere(dipartimenti.INGEGNERIA);
+    var user = new User(msg.from.id, telegramBot);
+    user.getDipartimento().then(function (dipartimentoId) {
+        return orari.getAuleLibere(dipartimenti[dipartimentoId]);
     }).then(function (aule) {
         var message = 'Eccoti una lista delle aule libere (sperando non siano chiuse):';
         aule.forEach(function (item) {

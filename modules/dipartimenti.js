@@ -1,48 +1,61 @@
-module.exports = {
-    TUTTI: {
-        id: 0
+module.exports = [
+    {
+        id: 0,
+        name: "Tutti"
     },
-    ARCHITETTURA: {
+    {
         id: 1,
-        orariKey: 'arch'
+        orariKey: 'arch',
+        name: 'Architettura'
     },
-    ECONOMIA: {
+    {
         id: 2,
-        orariKey: 'economia'
+        orariKey: 'economia',
+        name: 'Economia'
     },
-    FILOSOFIA: {
-        id: 3
+    {
+        id: 3,
+        name: 'Filosofia, Comunicazione e Spettacoloa'
     },
-    GIURISPRUDENZA: {
+    {
         id: 4,
-        orariKey: 'giur'
+        orariKey: 'giur',
+        name: 'Giurisprudenza'
     },
-    INGEGNERIA: {
+    {
         id: 5,
         orariKey: 'ing',
-        corsiDiLaurea: ['tutti', 'informatica', 'elettronica', 'meccanica', 'civile']
+        corsiDiLaurea: ['tutti', 'informatica', 'elettronica', 'meccanica', 'civile'],
+        name: 'Ingegneria'
     },
-    LINGUE: {
+    {
         id: 6,
-        orariKey: 'lettere'
+        orariKey: 'lettere',
+        name: 'Lingue, Letterature e Culture Straniere'
     },
-    MATEMATICA_FISICA: {
-        id: 7
+    {
+        id: 7,
+        name: 'Matematica e Fisica'
     },
-    SCIENZE: {
-        id: 8
+    {
+        id: 8,
+        name: 'Scienze'
     },
-    SCIENZE_FORMAZIONE: {
-        id: 9
+    {
+        id: 9,
+        name: 'Scienze della Formazione'
     },
-    SCIENZE_POLITICHE: {
+    {
         id: 10,
-        orariKey: 'spolitiche'
+        orariKey: 'spolitiche',
+        name: 'Scienze Politiche'
     },
-    STUDI_AZIENDALI: {
-        id: 11
+    {
+        id: 11,
+        name: 'Studi Aziendali'
     },
-    STUDI_UMANISTICI: {
-        id: 12
+    {
+        id: 12,
+        name: 'Studi Umanistici'
     }
-};
+];
