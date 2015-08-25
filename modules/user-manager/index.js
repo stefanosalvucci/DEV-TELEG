@@ -1,46 +1,16 @@
 var database = require('../database').db;
 var dipartimenti = require('../dipartimenti');
+var speaker = require('../speaker');
 
-var Speaker = function () {
-    this.questionsPending = {}
-};
-
-Speaker.prototype.handleResponse = function (msg, telegramBot) {
-    var questionPending = this.questionsPending[msg.from.id];
-    var response;
-    if (typeof questionPending === 'undefined') return false;
-    switch (questionPending.questionType) {
-        case 1:
-            response = this.responseDipartimento;
-            break;
-        default:
-            return false;
-    }
-    response.call(this, msg, telegramBot, questionPending);
-    return true;
-};
-
-Speaker.prototype.askDipartimento = function (telegramId, telegramBot, resolve) {
+speaker.addQuestionType('dipartimento').ask(function (telegramId, telegramBot, question) {
     var message = "Di quale dipartimento fai parte?";
     for (var i = 1; i < dipartimenti.length; i++) {
         message += '\n' + i + ') ' + dipartimenti[i].name;
     }
     telegramBot.sendMessage(telegramId, message);
-    this.questionsPending[telegramId] = {
-        questionType: 1,
-        resolve: resolve
-    };
-};
-
-Speaker.prototype.responseDipartimento = function (msg, telegramBot, question) {
-    delete this.questionsPending[msg.from.id];
+}).response(function (msg, telegramBot, question) {
     question.resolve(parseInt(msg.text));
-};
-
-Speaker.prototype.askFacolta = function (telegramId, telegramBot, resolver) {
-    this.telegramBot.sendMessage(telegramId, message);
-    this.questionsPending[telegramId] = 2;
-};
+});
 
 var User = function (telegramId, telegramBot) {
     this.telegramBot = telegramBot;
@@ -52,9 +22,9 @@ var User = function (telegramId, telegramBot) {
 User.prototype.getDipartimento = function () {
     var that = this;
     return this.getUser().then(function (user) {
-        if (!user.dipartimentoId) {
+        if (!user['dipartimentoId']) {
             return new Promise(function (resolve, reject) {
-                speaker.askDipartimento(that.telegramId, that.telegramBot, resolve);
+                speaker.ask('dipartimento', that.telegramId, that.telegramBot, resolve, reject);
             });
         }
         return Promise.resolve(user.dipartimentoId);
@@ -111,13 +81,6 @@ User.prototype.getUser = function () {
  return this.collection.insertOne(user);
  };*/
 
-var speaker = new Speaker();
-
 module.exports = {
-    User: User,
-    Middleware: function (msg, telegramBot, next) {
-        if (!speaker.handleResponse(msg, telegramBot)) {
-            next();
-        }
-    }
+    User: User
 };
