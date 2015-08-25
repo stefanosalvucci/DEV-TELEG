@@ -23,14 +23,20 @@ User.prototype.getDipartimento = function () {
     var that = this;
     return this.getUser().then(function (user) {
         if (!user['dipartimentoId']) {
-            return new Promise(function (resolve, reject) {
-                speaker.ask('dipartimento', that.telegramId, that.telegramBot, resolve, reject);
+            return speaker.ask('dipartimento', that.telegramId, that.telegramBot).then(function (dipartimentoId) {
+                return that.update({dipartimentoId: dipartimentoId}).then(function () {
+                    return Promise.resolve(dipartimentoId);
+                });
             });
         }
         return Promise.resolve(user.dipartimentoId);
     }).catch(function (err) {
         console.error(err);
     });
+};
+
+User.prototype.update = function (update) {
+    return this.collection.updateOne({telegramId: this.telegramId}, {$set: update});
 };
 
 /**

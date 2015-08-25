@@ -37,28 +37,28 @@ Speaker.prototype.addQuestionType = function (questionName) {
  * @param questionName {string}
  * @param telegramId {number}
  * @param telegramBot {TelegramBot}
- * @param resolve {function} function to call on success
- * @param reject {function} function to call on error
  */
-Speaker.prototype.ask = function (questionName, telegramId, telegramBot, resolve, reject) {
-    var questionsPending = this.questionsPending;
+Speaker.prototype.ask = function (questionName, telegramId, telegramBot) {
+    var that = this;
     if (typeof this.questionNames[questionName] === 'undefined') {
         throw new Error('Question not defined');
     }
-    var question = {
-        telegramId: telegramId,
-        questionName: questionName,
-        resolve: function (data) {
-            delete questionsPending[telegramId];
-            resolve(data)
-        },
-        reject: function (err) {
-            delete questionsPending[telegramId];
-            reject(err)
-        }
-    };
-    this.questionsPending[telegramId] = question;
-    this.questionNames[questionName].ask(telegramId, telegramBot, question);
+    return new Promise(function (resolve, reject) {
+        var question = {
+            telegramId: telegramId,
+            questionName: questionName,
+            resolve: function (data) {
+                delete that.questionsPending[telegramId];
+                resolve(data)
+            },
+            reject: function (err) {
+                delete that.questionsPending[telegramId];
+                reject(err)
+            }
+        };
+        that.questionsPending[telegramId] = question;
+        that.questionNames[questionName].ask(telegramId, telegramBot, question);
+    });
 };
 
 Speaker.prototype.handleResponse = function (msg, telegramBot) {
