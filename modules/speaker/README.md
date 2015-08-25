@@ -4,7 +4,7 @@
 ### Define a new question
 
 ```js
-speaker.addQuestionType('dipartimento').ask(function (telegramId, telegramBot, question) {
+speaker.addQuestion('dipartimento').ask(function (telegramId, telegramBot, question) {
      var message = "Di quale dipartimento fai parte?";
      for (var i = 1; i < dipartimenti.length; i++) {
          message += '\n' + i + ') ' + dipartimenti[i].name;

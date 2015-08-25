@@ -14,7 +14,7 @@ var Speaker = function () {
  * @param questionName {string} the name of this
  * @returns {{ask: Function, response: Function}}
  */
-Speaker.prototype.addQuestionType = function (questionName) {
+Speaker.prototype.addQuestion = function (questionName) {
     var q = this.questionNames[questionName] = {
         askF: null,
         responseF: null
