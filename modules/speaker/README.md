@@ -19,8 +19,6 @@ speaker.addQuestionType('dipartimento').ask(function (telegramId, telegramBot, q
 
 ```js
 function getDipartimento() {
-    return new Promise(function (resolve, reject) {
-        speaker.ask('dipartimento', telegramId, telegramBot, resolve, reject);
-    });
+    return speaker.ask('dipartimento', telegramId, telegramBot, resolve, reject);
 }
 ```

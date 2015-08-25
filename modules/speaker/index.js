@@ -16,8 +16,8 @@ var Speaker = function () {
  */
 Speaker.prototype.addQuestionType = function (questionName) {
     var q = this.questionNames[questionName] = {
-        ask: null,
-        response: null
+        askF: null,
+        responseF: null
     };
     var that = {
         ask: function (cb) {
@@ -33,10 +33,12 @@ Speaker.prototype.addQuestionType = function (questionName) {
 };
 
 /**
+ /**
  * Asks a question
  * @param questionName {string}
  * @param telegramId {number}
  * @param telegramBot {TelegramBot}
+ * @returns {Promise}
  */
 Speaker.prototype.ask = function (questionName, telegramId, telegramBot) {
     var that = this;
@@ -57,7 +59,7 @@ Speaker.prototype.ask = function (questionName, telegramId, telegramBot) {
             }
         };
         that.questionsPending[telegramId] = question;
-        that.questionNames[questionName].ask(telegramId, telegramBot, question);
+        that.questionNames[questionName].askF(telegramId, telegramBot, question);
     });
 };
 
@@ -65,7 +67,7 @@ Speaker.prototype.handleResponse = function (msg, telegramBot) {
     var question = this.questionsPending[msg.from.id];
     if (typeof question === 'undefined') return false;
     var questionName = question.questionName;
-    this.questionNames[questionName].response(msg, telegramBot, question);
+    this.questionNames[questionName].responseF(msg, telegramBot, question);
     //response.call(this, msg, telegramBot, question);
     return true;
 };
