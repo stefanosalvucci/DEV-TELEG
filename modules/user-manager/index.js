@@ -10,7 +10,7 @@ speaker.addQuestion('dipartimento').ask(function (telegramId, telegramBot, quest
     telegramBot.sendMessage(telegramId, message);
 }).response(function (msg, telegramBot, question) {
     if (parseInt(msg.text)) {
-        question.resolve();
+        question.resolve(parseInt(msg.text));
     } else {
         question.reject(new Error('User response not a number'))
     }

@@ -21,11 +21,11 @@ Speaker.prototype.addQuestion = function (questionName) {
     };
     var that = {
         ask: function (cb) {
-            q.ask = cb;
+            q.askF = cb;
             return that;
         },
         response: function (cb) {
-            q.response = cb;
+            q.responseF = cb;
             return that;
         }
     };
