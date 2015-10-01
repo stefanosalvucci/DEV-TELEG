@@ -3,6 +3,7 @@ var telegramBot = require('./modules/telegram-bot');
 var genius = require('./modules/genius');
 var speaker = require('./modules/speaker');
 
+require('./scheduling');
 require('./commands');
 commandManager.use(speaker.Middleware);
 commandManager.use(genius.Middleware);

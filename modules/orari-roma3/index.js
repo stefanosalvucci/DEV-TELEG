@@ -7,8 +7,6 @@ var dipartimenti = require('../dipartimenti');
 var ORARI_COLLECTION = 'orari';
 var AULE_COLLECTION = 'aule';
 
-var todayDate = new Date(2015, 5, 16, 11, 5); // TODO Today date
-
 var OrariRomaTre = function () {
 };
 
@@ -163,8 +161,9 @@ function updateAule(facolta, dipartimento) {
  * @returns {Promise}
  */
 var updateDipartimentoDb = function (dipartimento) {
+    var todayDate = new Date();
     return new Promise(function (resolve, reject) {
-        fetchOrari(dipartimento, todayDate, new Date(todayDate.getTime() + 86400000)).then(function (object) {
+        fetchOrari(dipartimento, todayDate, new Date(todayDate.getTime() + (86400000 * 2))).then(function (object) {
             var facolta = object['facolta'];
             Promise.all([updateAule(facolta, dipartimento), updateOrari(facolta, dipartimento)])
                 .then(resolve).catch(reject);
@@ -178,11 +177,17 @@ var updateDipartimentoDb = function (dipartimento) {
  * @return {Promise}
  */
 OrariRomaTre.prototype.getAuleLibere = function (dipartimento) {
+    var todayDate = new Date();
+    var fromDate = new Date();
+    var toDate = new Date();
+    fromDate.setHours(0, 0, 0, 0);
+    toDate.setHours(24, 0, 0, 0);
+    console.log(todayDate.toLocaleString());
     return new Promise(function (resolve, reject) {
         var auleObj = {};
         var auleArr = [];
         db.collection(ORARI_COLLECTION).find({
-            dateFine: {$gte: todayDate},
+            dateFine: {$gte: fromDate, $lte: toDate},
             dipartimento: dipartimento.id
         }, {
             _id: 0,
@@ -191,12 +196,13 @@ OrariRomaTre.prototype.getAuleLibere = function (dipartimento) {
             dateFine: 1
         }).forEach(
             function (item) {
-                if (item.dateInizio < todayDate && item.dateFine > todayDate) {
-                    auleObj[item.aula] = -1
-                } else {
-                    if (typeof auleObj[item.aula] === 'undefined') auleObj[item.aula] = item.dateInizio;
-                    else if (auleObj[item.aula] > item.dateInizio && auleObj[item.aula] != -1) auleObj[item.aula] = item.dateInizio;
+                console.log(item);
+                if (item.dateInizio < todayDate && todayDate < item.dateFine) auleObj[item.aula] = -1; // Aula occupata
+                else if (typeof auleObj[item.aula] === 'undefined') {
+                    if (item.dateInizio < todayDate) auleObj[item.aula] = toDate;
+                    else auleObj[item.aula] = item.dateInizio;
                 }
+                else if (item.dateInizio < auleObj[item.aula] && item.dateInizio > todayDate && auleObj[item.aula] !== -1) auleObj[item.aula] = item.dateInizio;
             },
             function (err) {
                 if (err) return reject(err);
