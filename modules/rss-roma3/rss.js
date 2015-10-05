@@ -1,7 +1,8 @@
 var xml2js = require('xml2js');
 var http = require('http');
 
-var RSS = function () {};
+var RSS = function () {
+};
 /**
  * Get the news and update the DataBase
  * @param {String} url
@@ -24,7 +25,7 @@ RSS.prototype.fetchNews = function (url, facolta, corsoLaurea, corso, docente) {
                 docente: docente,
                 testo: updates[i]['description'][0],
                 titolo: updates[i]['title'][0],
-                url: updates[i]['link'][0]
+                url: updates[i]['link'][0],
             });
             console.log('[NEWS] Updated: ' + updates[i]['title'][0]);
         }
@@ -54,14 +55,12 @@ function get(url) {
         http.get(url, function (res) {
             res.on('data', function (chunk) {
                 xml += chunk;
-            })
-                .on('end', function () {
-                    parser.parseString(xml);
-                });
-        })
-            .on('error', function (err) {
-                reject(err);
+            }).on('end', function () {
+                parser.parseString(xml);
             });
+        }).on('error', function (err) {
+            reject(err);
+        });
     });
 }
 

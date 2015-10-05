@@ -1,6 +1,6 @@
-var Facolta = require('./Facolta');
-var Informatica = require('./Informatica');
-var Elettronica = require('./Elettronica');
+var Facolta = require('./facolta');
+var Informatica = require('./informatica');
+var Elettronica = require('./elettronica');
 
 var Ingegneria = function () {};
 /**

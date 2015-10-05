@@ -1,3 +1,8 @@
+/**
+ * This module manages the users
+ * @module
+ */
+
 var database = require('../database').db;
 var dipartimenti = require('../dipartimenti');
 var speaker = require('../speaker');
@@ -16,6 +21,12 @@ speaker.addQuestion('dipartimento').ask(function (telegramId, telegramBot, quest
     }
 });
 
+/**
+ * Create or get a new User.
+ * @param telegramId
+ * @param telegramBot
+ * @constructor
+ */
 var User = function (telegramId, telegramBot) {
     this.telegramBot = telegramBot;
     this.telegramId = telegramId;

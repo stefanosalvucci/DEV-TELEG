@@ -1,3 +1,7 @@
+/**
+ * CommandManager take a message, do an action and call a callback for response
+ * @constructor
+ */
 var CommandManager = function () {
     this.commands = {};
 

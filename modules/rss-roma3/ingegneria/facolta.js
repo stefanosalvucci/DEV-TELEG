@@ -1,4 +1,4 @@
-var RSS = require('../RSS');
+var RSS = require('../rss');
 
 var Facolta = function () {};
 /**

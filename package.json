@@ -1,9 +1,9 @@
 {
   "name": "LUGBot",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/bot"
   },
   "dependencies": {
     "body-parser": "^1.13.2",
@@ -17,7 +17,7 @@
     "mongodb": "^2.0",
     "morgan": "^1.6.1",
     "node-schedule": "^0.2.9",
-    "node-telegram-bot-api": "^0.11.1",
+    "node-telegram-bot-api": "^0.14.0",
     "serve-favicon": "^2.3.0",
     "xml2js": "^0.4.9"
   }

@@ -1,3 +1,8 @@
+/**
+ * This module fetches data from orari.uniroma3.it in XML and save it in JSON format to a MongoDb database
+ * @module
+ */
+
 var xml2js = require('xml2js');
 var util = require('util');
 var http = require('http');
@@ -217,6 +222,3 @@ OrariRomaTre.prototype.getAuleLibere = function (dipartimento) {
 };
 
 module.exports = new OrariRomaTre();
-
-// TODO scheduling
-//module.exports.updateDb();

@@ -1,3 +1,11 @@
+/**
+ * This module ask a question to the user resolving a Promise when the user answers.
+ * @module
+ */
+
+/**
+ * @constructor
+ */
 var Speaker = function () {
     this.questionsPending = {};
     this.questionNames = {};

@@ -1,3 +1,8 @@
+/**
+ * Brain is a AI module who simplify the interaction with user recognizing sentences.
+ * @module
+ */
+
 var brain = require('brain');
 var phrases = require('./sentences.json');
 var commands = require('../command-manager');
