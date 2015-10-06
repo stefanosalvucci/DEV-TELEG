@@ -26,6 +26,7 @@ RSS.prototype.fetchNews = function (url, facolta, corsoLaurea, corso, docente) {
                 testo: updates[i]['description'][0],
                 titolo: updates[i]['title'][0],
                 url: updates[i]['link'][0],
+                sent: false
             });
             console.log('[NEWS] Updated: ' + updates[i]['title'][0]);
         }

@@ -24,7 +24,8 @@ var schemas = {
         docente: null,
         testo: null,
         titolo: null,
-        url: null
+        url: null,
+        sent: false
     },
     aula: {
         nome: null,
