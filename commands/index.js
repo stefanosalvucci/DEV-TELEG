@@ -10,6 +10,7 @@ var handleError = function (err, msg, telegramBot) {
 };
 
 var listaComandi = '/aulelibere - Mostra le aule libere adesso' +
+    '\n/dimenticami - Elimina le tue informazioni personali' +
     '\n/help - Mostra la lista dei comandi disponibili';
 
 commands.on('/start', function (msg, telegramBot) {
@@ -42,6 +43,15 @@ commands.on('/aulelibere', function (msg, telegramBot) {
 commands.on('/lezioni', function (msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, 'Mi dispiace, ma gli scansafatiche del LUG Roma Tre ancora non mi hanno' +
         ' insegnato come scrivere le lezioni odierne!');
+});
+
+commands.on('/dimenticami', function (msg, telegramBot) {
+    var user = new User(msg.from.id, telegramBot);
+    user.forget().then(function () {
+        telegramBot.sendMessage(msg.chat.id, 'Ooh che mal di testa... Non mi ricordo più chi sei!')
+    }).catch(function (err) {
+        handleError(err, msg, telegramBot);
+    });
 });
 
 commands.on('/cometichiami', function (msg, telegramBot) {

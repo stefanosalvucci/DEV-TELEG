@@ -3,7 +3,7 @@
 This software is a Telegram Bot that provides informations about "Università di Roma Tre".
 
 ## Version
-0.1.0 beta
+0.1.1
 
 ## Dependencies
 * mongodb
@@ -24,7 +24,7 @@ If the software is configurable, describe it in detail, either here or in other 
 Run `node bin/bot`
 
 ## Known issues
-This software is in beta release and it contain much issues.
+This software is in beta release and it can contain much issues.
 
 ## Getting help
 Instruct users how to get help with this software; this might include links to an issue tracker, wiki, mailing list, etc.

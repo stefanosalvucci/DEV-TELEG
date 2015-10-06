@@ -72,7 +72,7 @@ User.prototype.update = function (update) {
 User.prototype.getUser = function () {
     var collection = this.collection;
     var telegramId = this.telegramId;
-    return collection.findOne({telegramId: telegramId}).then(function (user) {
+    return collection.find({telegramId: telegramId}).limit(1).next().then(function (user) {
         if (user == null) {
             return collection.insertOne({
                 telegramId: telegramId
@@ -80,6 +80,15 @@ User.prototype.getUser = function () {
         }
         return Promise.resolve(user);
     });
+};
+
+/**
+ * Forget everything about this user
+ *
+ * @returns {Promise}
+ */
+User.prototype.forget = function () {
+    return this.collection.removeOne({telegramId: this.telegramId});
 };
 
 /**
