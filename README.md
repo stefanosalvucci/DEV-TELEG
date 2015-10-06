@@ -1,59 +1,49 @@
 # LUG Roma Tre Bot
 
-This software is a Telegram Bot that provides informations about "Università di Roma Tre".
+Questo software è un Telegram Bot che fornisce le aule libere dell'Università di Roma Tre.
 
-## Version
-0.1.1
+## Versione
+1.0.0
 
-## Dependencies
+## Dipendenze
 * mongodb
 * nodejs
 * npm
 
-## Installation
-1. setup dependencies;
-2. clone this repository;
-3. like others node based software, run `npm install` into the cloned folder;
-4. create a new Telegram Bot like described in this page: https://core.telegram.org/bots#3-how-do-i-create-a-bot
-5. copy `config.json.sample` to `config.json` and edit it using your personal informations.
+## Installazione e Configurazione
+1. Installare le dipendenze;
+2. Clonare questo repository;
+3. Come gli altri applicativi node, lanciare `npm install` nella cartella clonata;
+4. Creare un nuovo Bot Telegram come spiegato [in questa pagina] (https://core.telegram.org/bots#3-how-do-i-create-a-bot)
+5. copiare `config.json.sample` in `config.json` ed inserire le proprie informazioni personali.
 
-## Configuration
-If the software is configurable, describe it in detail, either here or in other documentation to which you link.
+## Utilizzo
+Eseguire il comando `node bin/bot` per avviare l'applicazione
 
-## Usage
-Run `node bin/bot`
+## Problemi noti
+Al momento non sono stati riscontrati problemi non risolti, nel caso venga riscontrato un problema si prega di comunicarlo tramite la funzione [Issue Tracker] (https://github.com/LUGRomaTre/LUGBot/issues)
 
-## Known issues
-This software is in beta release and it can contain much issues.
+## Aiuto
+Verrà scritta una wiki, per il momento si può utilizzare la funzione [Issue Tracker] (https://github.com/LUGRomaTre/LUGBot/issues)
 
-## Getting help
-Instruct users how to get help with this software; this might include links to an issue tracker, wiki, mailing list, etc.
+## Collabora
+Come tutto il software del LUG, chiunque è il benvenuto a partecipare allo sviluppo. Tutte le [Pull Requests] (https://github.com/LUGRomaTre/LUGBot/pulls) verranno revisionate dagli sviluppatori del LUG.
 
-**Example**
+Se la Pull Request viene _accettata_ l'autore verrà inserito nell'elenco dei Contributors, mentre invece se viene giudicata non idonea, verrà data esaustiva spiegazione all'autore.
 
-If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
-
-## Getting involved
-
-This section should detail why people should get involved and describe key areas you are
-currently focusing on; e.g., trying to get feedback on features, fixing certain bugs, building
-important pieces, etc.
-
-General instructions on _how_ to contribute should be stated with a link to [CONTRIBUTING](CONTRIBUTING.md).
-
+### ATTENZIONE! NON VENGONO PRESE IN CONSIDERAZIONE LE PULL REQUEST SUL BRANCH `master` ###
 
 ----
 
 ## Open source licensing info
-1. [TERMS](TERMS.md)
-2. [LICENSE](LICENSE.md)
+1. [TERMINI E CONDIZIONI](TERMS.md)
+2. [LICENZA](LICENSE.md)
 3. [CFPB Source Code Policy](https://github.com/cfpb/source-code-policy/)
 
 
 ----
 
-## Credits and references
+## Crediti & Contributors
 
-1. Projects that inspired you
-2. Related projects
-3. Books, papers, talks, or other sources that have meaningful impact or influence on this project
+- [iksoiks] (https://github.com/iksoiks) - LUG Roma Tre
+- [KernelPanic] (https://github.com/lorenzo-pizzari) - LUG Roma Tre
