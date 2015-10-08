@@ -14,9 +14,9 @@ TelegramBot.prototype.attachCommandManager = function (commandManager) {
 };
 
 TelegramBot.prototype.sendMessage = (function (superSendMessage) {
-    return function (chatId, message) {
+    return function (chatId, message, options) {
         logger.log(chatId, message, true);
-        superSendMessage.call(this, chatId, message);
+        superSendMessage.call(this, chatId, message, options);
     }
 })(TelegramBot.prototype.sendMessage); // Log message
 

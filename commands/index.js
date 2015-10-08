@@ -24,6 +24,7 @@ commands.on('/help', function (msg, telegramBot) {
 });
 
 commands.on('/aulelibere', function (msg, telegramBot) {
+    var hideKeyboardOpts = {reply_markup: JSON.stringify({hide_keyboard: true})};
     var user = new User(msg.from.id, telegramBot);
     user.getDipartimento().then(function (dipartimentoId) {
         return orari.getAuleLibere(dipartimenti[dipartimentoId]);
@@ -43,9 +44,9 @@ commands.on('/aulelibere', function (msg, telegramBot) {
         });
         return message;
     }).then(function (message) {
-        telegramBot.sendMessage(msg.chat.id, message);
+        telegramBot.sendMessage(msg.chat.id, message, hideKeyboardOpts);
     }).catch(function (err) {
-        telegramBot.sendMessage(msg.chat.id, err.message);
+        telegramBot.sendMessage(msg.chat.id, err.message, hideKeyboardOpts);
     });
 });
 
@@ -73,9 +74,6 @@ commands.on('/grazie', function (msg, telegramBot) {
 
 // TODO Access this command only in debug mode
 //commands.on('/debug', function (msg, telegramBot) {
-//    console.log(msg);
-//    var user = new User(msg.from.id);
-//    user.getDipartimento();
 //});
 
 commands.on('/default', function (msg, telegramBot) {

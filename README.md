@@ -3,7 +3,7 @@
 Questo software è un Telegram Bot che fornisce le aule libere dell'Università di Roma Tre.
 
 ## Versione
-1.0.0
+1.0.1
 
 ## Dipendenze
 * mongodb
