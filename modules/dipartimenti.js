@@ -43,6 +43,7 @@ module.exports = [
     },
     {
         id: 9,
+        orariKey: 'formazione',
         name: 'Scienze della Formazione'
     },
     {

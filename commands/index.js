@@ -28,12 +28,21 @@ commands.on('/aulelibere', function (msg, telegramBot) {
     user.getDipartimento().then(function (dipartimentoId) {
         return orari.getAuleLibere(dipartimenti[dipartimentoId]);
     }).then(function (aule) {
-        var message = 'Eccoti una lista delle aule libere (sperando non siano chiuse!):';
+        var message = '';
+        if (aule.length == 0)
+            return message = 'Scusa ma non sono riuscito a trovare aule libere nel tuo dipartimento.\n' +
+                'Potrebbero non esserci aule libere in questo momento, oppure un problema sui server di Ateneo';
+
+        message = 'Eccoti una lista delle aule libere (sperando non siano chiuse!):';
         aule.forEach(function (item) {
             message += '\n - ' + item.aula;
             if (item.date.getDate() == new Date().getDate())
                 message += ' fino alle ' + moment(item.date).format('HH:mm');
+            else
+                message += ' fino alla chiusura';
         });
+        return message;
+    }).then(function (message) {
         telegramBot.sendMessage(msg.chat.id, message);
     }).catch(function (err) {
         handleError(err, msg, telegramBot);
