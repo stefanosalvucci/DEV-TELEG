@@ -29,9 +29,11 @@ Verrà scritta una wiki, per il momento si può utilizzare la funzione [Issue Tr
 ## Collabora
 Come tutto il software del LUG, chiunque è il benvenuto a partecipare allo sviluppo. Tutte le [Pull Requests] (https://github.com/LUGRomaTre/LUGBot/pulls) verranno revisionate dagli sviluppatori del LUG.
 
+Per avere un idea di quello che c'è da fare verificare l'[Issue Tracker] (https://github.com/LUGRomaTre/LUGBot/issues) e il documento [TODO] (TODO.md)
+
 Se la Pull Request viene _accettata_ l'autore verrà inserito nell'elenco dei Contributors, mentre invece se viene giudicata non idonea, verrà data esaustiva spiegazione all'autore.
 
-### ATTENZIONE! NON VENGONO PRESE IN CONSIDERAZIONE LE PULL REQUEST SUL BRANCH `master` ###
+#### ATTENZIONE! NON VENGONO PRESE IN CONSIDERAZIONE LE PULL REQUEST SUL BRANCH `master` ####
 
 ----
 
