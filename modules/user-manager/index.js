@@ -14,10 +14,14 @@ speaker.addQuestion('dipartimento').ask(function (telegramId, telegramBot, quest
     }
     telegramBot.sendMessage(telegramId, message);
 }).response(function (msg, telegramBot, question) {
-    if (parseInt(msg.text)) {
-        question.resolve(parseInt(msg.text));
+
+    var dipartimentoUtente = parseInt(msg.text);
+    if (dipartimentoUtente) {
+        if (dipartimentoUtente > dipartimenti.length - 1 || dipartimentoUtente < 1)
+            question.reject(new Error('Questo numero non è un dipartimento valido.'));
+        question.resolve(dipartimentoUtente);
     } else {
-        question.reject(new Error('User response not a number'))
+        question.reject(new Error('Ho bisogno del numero del Dipartimento per capire cosa intendi.'))
     }
 });
 
@@ -45,8 +49,6 @@ User.prototype.getDipartimento = function () {
             });
         }
         return Promise.resolve(user.dipartimentoId);
-    }).catch(function (err) {
-        console.error(err);
     });
 };
 

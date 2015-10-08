@@ -45,7 +45,7 @@ commands.on('/aulelibere', function (msg, telegramBot) {
     }).then(function (message) {
         telegramBot.sendMessage(msg.chat.id, message);
     }).catch(function (err) {
-        handleError(err, msg, telegramBot);
+        telegramBot.sendMessage(msg.chat.id, err.message);
     });
 });
 
