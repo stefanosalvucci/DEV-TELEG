@@ -15,7 +15,7 @@ module.exports = [
     },
     {
         id: 3,
-        name: 'Filosofia, Comunicazione e Spettacoloa'
+        name: 'Filosofia, Comunicazione e Spettacolo'
     },
     {
         id: 4,
