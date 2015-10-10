@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * This module fetches data from orari.uniroma3.it in XML and save it in JSON format to a MongoDb database
  * @module

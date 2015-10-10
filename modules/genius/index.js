@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Brain is a AI module who simplify the interaction with user recognizing sentences.
  * @module

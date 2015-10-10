@@ -1,3 +1,5 @@
+'use strict';
+
 var mongoDbUrl = require('../config.json')['mongoDbUrl'];
 var MongoClient = require('mongodb').MongoClient;
 var db = null;

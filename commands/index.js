@@ -1,8 +1,11 @@
+'use strict';
+
 var moment = require('moment');
 var commands = require('../modules/command-manager');
 var orari = require('../modules/orari-roma3');
 var dipartimenti = require('../modules/dipartimenti');
 var User = require('../modules/user-manager').User;
+var errors = require('../lib/errors');
 
 var handleError = function (err, msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, "Si è verificato un errore, verrà risolto al più presto");
@@ -46,7 +49,10 @@ commands.on('/aulelibere', function (msg, telegramBot) {
     }).then(function (message) {
         telegramBot.sendMessage(msg.chat.id, message, hideKeyboardOpts);
     }).catch(function (err) {
-        telegramBot.sendMessage(msg.chat.id, err.message, hideKeyboardOpts);
+        if (err instanceof errors.InputValidationError)
+            telegramBot.sendMessage(msg.chat.id, err.message, hideKeyboardOpts);
+        else
+            handleError(err, msg, telegramBot);
     });
 });
 

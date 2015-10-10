@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Generate an array of array of string of numbers
  * @param {number} from - First number to generate

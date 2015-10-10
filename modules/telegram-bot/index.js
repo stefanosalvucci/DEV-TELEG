@@ -1,3 +1,5 @@
+'use strict';
+
 var config = require('../../config.json');
 var token = config["telegramToken"];
 var logger = require('./logger');
