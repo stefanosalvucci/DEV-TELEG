@@ -1,17 +1,18 @@
 #!/usr/bin/env node
+'use strict';
 
 // catch the uncaught errors that weren't wrapped in a domain or try catch statement
 // do not use this in modules, but only in applications, as otherwise we could have multiple of these bound
 process.on('uncaughtException', function (err) {
     // handle the error safely
-    console.error(err)
+    console.error(err.stack)
 });
 
 require('es6-promise').polyfill(); // EcmaScript6 Promise compatibility for old versions of Node.js
 var database = require('../modules/database');
 
 database.connect().then(function (db) {
-    require('../bot-app');
+    require('../app');
 }).catch(function (err) {
     console.error(err.stack);
 });

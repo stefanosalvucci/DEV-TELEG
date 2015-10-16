@@ -1,24 +1,18 @@
 {
   "name": "LUGBot",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "start": "node ./bin/bot"
   },
   "dependencies": {
-    "body-parser": "^1.13.2",
     "brain": "^0.7.0",
-    "cookie-parser": "^1.3.5",
     "debug": "^2.2.0",
     "es6-promise": "^3.0.2",
-    "express": "^4.13.1",
-    "jade": "^1.11.0",
     "moment": "^2.10.6",
     "mongodb": "^2.0",
-    "morgan": "^1.6.1",
     "node-schedule": "^0.2.9",
     "node-telegram-bot-api": "^0.14.0",
-    "serve-favicon": "^2.3.0",
     "xml2js": "^0.4.9"
   }
 }

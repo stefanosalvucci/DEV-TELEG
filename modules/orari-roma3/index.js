@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * This module fetches data from orari.uniroma3.it in XML and save it in JSON format to a MongoDb database
  * @module
@@ -63,7 +65,7 @@ var fetchOrari = function (dipartimento, fromDate, toDate) {
             res.on('data', function (chunk) {
                 output += chunk;
             }).on('end', function () {
-                console.log("HTTP done: " + url);
+              console.log("[ORARI] HTTP done: " + url);
                 parser.parseString(output);
             });
         }).on('error', reject);
@@ -187,7 +189,6 @@ OrariRomaTre.prototype.getAuleLibere = function (dipartimento) {
     var toDate = new Date();
     fromDate.setHours(0, 0, 0, 0);
     toDate.setHours(24, 0, 0, 0);
-    console.log(todayDate.toLocaleString());
     return new Promise(function (resolve, reject) {
         var auleObj = {};
         var auleArr = [];
@@ -201,7 +202,6 @@ OrariRomaTre.prototype.getAuleLibere = function (dipartimento) {
             dateFine: 1
         }).forEach(
             function (item) {
-                console.log(item);
                 if (item.dateInizio < todayDate && todayDate < item.dateFine) auleObj[item.aula] = -1; // Aula occupata
                 else if (typeof auleObj[item.aula] === 'undefined') {
                     if (item.dateInizio < todayDate) auleObj[item.aula] = toDate;

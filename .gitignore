@@ -38,4 +38,6 @@ build/Release
 node_modules
 
 # Only related to this project
-config.json
+etc/config.js
+etc/*.key
+etc/*.pem

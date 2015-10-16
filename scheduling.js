@@ -1,3 +1,5 @@
+'use strict';
+
 var schedule = require('node-schedule');
 var orari = require('./modules/orari-roma3');
 

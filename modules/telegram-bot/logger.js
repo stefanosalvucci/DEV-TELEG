@@ -1,3 +1,5 @@
+'use strict';
+
 var db = require('../database').db;
 
 var ConversationLogger = function () {
