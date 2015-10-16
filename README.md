@@ -3,7 +3,7 @@
 Questo software è un Telegram Bot che fornisce le aule libere dell'Università di Roma Tre.
 
 ## Versione
-1.0.2
+1.1.0
 
 ## Dipendenze
 * mongodb
@@ -15,7 +15,7 @@ Questo software è un Telegram Bot che fornisce le aule libere dell'Università 
 2. Clonare questo repository;
 3. Come gli altri applicativi node, lanciare `npm install` nella cartella clonata;
 4. Creare un nuovo Bot Telegram come spiegato [in questa pagina] (https://core.telegram.org/bots#3-how-do-i-create-a-bot)
-5. copiare `config.json.sample` in `config.json` ed inserire le proprie informazioni personali.
+5. copiare `etc/config.sample.js` in `etc/config.js` ed inserire le proprie configurazioni personali.
 
 ## Utilizzo
 Eseguire il comando `node bin/bot` per avviare l'applicazione

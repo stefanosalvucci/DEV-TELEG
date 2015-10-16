@@ -1,32 +1,36 @@
 'use strict';
 
-var config = require('../../config.json');
-var token = config["telegramToken"];
+var config = require('../../etc/config');
+var token = config.telegramToken;
 var logger = require('./logger');
 var TelegramBot = require('node-telegram-bot-api');
 
 TelegramBot.prototype.attachCommandManager = function (commandManager) {
-    this.on('message', function (msg) {
-        logger.log(msg.chat.id, msg.text, false); // Log message
-        commandManager.handleMessage(msg, telegramBot)
-    });
-    this.on('error', function eventEmitterCallback(err) {
-        console.error(err.stack);
-    });
+  this.on('message', function (msg) {
+    logger.log(msg.chat.id, msg.text, false); // Log message
+    commandManager.handleMessage(msg, telegramBot)
+  });
+  this.on('error', function eventEmitterCallback(err) {
+    console.error(err.stack);
+  });
 };
 
 TelegramBot.prototype.sendMessage = (function (superSendMessage) {
-    return function (chatId, message, options) {
-        logger.log(chatId, message, true);
-        superSendMessage.call(this, chatId, message, options);
-    }
+  return function (chatId, message, options) {
+    logger.log(chatId, message, true);
+    superSendMessage.call(this, chatId, message, options);
+  }
 })(TelegramBot.prototype.sendMessage); // Log message
 
 var telegramBot = new TelegramBot(token, {
-    polling: {
-        timeout: 2,
-        interval: 2000
-    }
+  webHook: config['webHook'],
+  polling: config['polling']
 });
+
+if (config.webHook) {
+  telegramBot.setWebHook('https://' + config.webHook.domain + ':' + config.webHook.port + '/bot' + config.telegramToken, config.webHook.cert);
+} else {
+  telegramBot.setWebHook('');
+}
 
 module.exports = telegramBot;

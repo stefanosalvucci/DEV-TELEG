@@ -1,3 +1,10 @@
+## 1.1.0 (16/10/2015)
+### Bugfix:
+
+- Formato configurazione da JSON a JS
+- Uso del WebHook al posto del Long Polling
+
+
 ## 1.0.1 (09/10/2015)
 ### Funzionalità:
 
@@ -7,6 +14,7 @@
 
 - Input non validato durante la scelta del dipartimento
 - Typo
+
 
 ## 1.0.0 (06/10/2015)
 - Prima versione stabile
