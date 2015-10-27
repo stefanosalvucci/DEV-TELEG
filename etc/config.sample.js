@@ -38,7 +38,12 @@ exports.webHook = {
   /**
    * Webhook domain (must be the same of CN of the certificate)
    */
-  domain: 'yourdomain.example.com'
+  domain: 'yourdomain.example.com',
+
+  /**
+   * Custom Webhook url (optional)
+   */
+  url: 'https://' + this.domain + ':' + this.port + '/bot' + exports.telegramToken
 };
 
 /**

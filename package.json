@@ -1,10 +1,11 @@
 {
   "name": "LUGBot",
-  "version": "1.0.2",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
     "start": "node ./bin/bot"
   },
+  "main": "bin/bot",
   "dependencies": {
     "brain": "^0.7.0",
     "debug": "^2.2.0",

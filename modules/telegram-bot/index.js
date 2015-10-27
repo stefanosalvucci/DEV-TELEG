@@ -28,7 +28,7 @@ var telegramBot = new TelegramBot(token, {
 });
 
 if (config.webHook) {
-  telegramBot.setWebHook('https://' + config.webHook.domain + ':' + config.webHook.port + '/bot' + config.telegramToken, config.webHook.cert);
+  telegramBot.setWebHook(config.webHook.url || 'https://' + config.webHook.domain + ':' + config.webHook.port + '/bot' + config.telegramToken, config.webHook.cert);
 } else {
   telegramBot.setWebHook('');
 }

@@ -1,3 +1,8 @@
+## 1.1.1 (16/10/2015)
+
+- Configurazione opzionale webHook.url aggiunta in etc/config.sample.js
+- Aggiornamento del database degli orari all'avvio
+
 ## 1.1.0 (16/10/2015)
 ### Bugfix:
 
