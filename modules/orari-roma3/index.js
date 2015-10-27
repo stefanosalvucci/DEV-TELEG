@@ -222,3 +222,4 @@ OrariRomaTre.prototype.getAuleLibere = function (dipartimento) {
 };
 
 module.exports = new OrariRomaTre();
+module.exports.updateDb();

@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 cd ../etc
-openssl req -newkey rsa:2048 -sha256 -nodes -keyout telegram.key -x509 -days 365 -out telegram.pem
+openssl req -newkey rsa:2048 -sha256 -nodes -keyout telegram.key -x509 -days 3650 -out telegram.pem # TODO Ask validate
