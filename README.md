@@ -2,7 +2,7 @@
 
 This software is a Telegram Bot that provides infos about free classrooms.
 
-Questo software è un Telegram Bot che fornisce le aule libere dell'Università di Roma Tre.
+Questo software è un Telegram Bot che sto provando a pushare le aule libere dell'Università di Roma Tre.
 
 ## Version
 1.1.1
