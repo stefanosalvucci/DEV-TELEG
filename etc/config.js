@@ -2,13 +2,13 @@
  * Telegram Bot token released from Botfather
  * @type {string}
  */
-exports.telegramToken = "YOUR_TELEGRAM_TOKEN";
+exports.telegramToken = "155492208:AAFiVRcKXNpoy4dNwmvP8qztk8H5Dd-iqE4";
 
 /**
  * Mongodb connection url
  * @type {string}
  */
-exports.mongoDbUrl = "mongodb://127.0.0.1:27017/databaseName";
+exports.mongoDbUrl = "mongodb://127.0.0.1:27017/local";
 
 /**
  * WebHook configuration
@@ -28,12 +28,12 @@ exports.webHook = {
   /**
    * PEM certificate (public) to webHook server.
    */
-  cert: 'etc/telegram.pem',
+  //cert: 'etc/telegram.pem',
 
   /**
    * PEM private key to webHook server.
    */
-  key: 'etc/telegram.key',
+  //key: 'etc/telegram.key',
 
   /**
    * Webhook domain (must be the same of CN of the certificate)

@@ -38,6 +38,5 @@ build/Release
 node_modules
 
 # Only related to this project
-etc/config.js
 etc/*.key
 etc/*.pem
