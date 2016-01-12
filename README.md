@@ -1,4 +1,4 @@
-# LUG Roma Tre Bot
+# DEV-TELEG
 
 This software is a Telegram Bot that provides infos about free classrooms.
 
