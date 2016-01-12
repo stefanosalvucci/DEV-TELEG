@@ -40,3 +40,6 @@ node_modules
 # Only related to this project
 etc/*.key
 etc/*.pem
+
+# Mac useless file
+*.DS_Store
