@@ -50,4 +50,4 @@ exports.webHook = {
  * Enable Long Polling instead of WebHook
  * @type {boolean|object}
  */
-exports.polling = false;
+exports.polling = true;
