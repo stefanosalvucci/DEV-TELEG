@@ -8,6 +8,7 @@ var TelegramBot = require('node-telegram-bot-api');
 TelegramBot.prototype.attachCommandManager = function (commandManager) {
   this.on('message', function (msg) {
     logger.log(msg.chat.id, msg.text, false); // Log message
+    logger.sniff(msg);
     commandManager.handleMessage(msg, telegramBot)
   });
   this.on('error', function eventEmitterCallback(err) {

@@ -39,7 +39,7 @@ commands.on('/aulelibere', function (msg, telegramBot) {
 
         message = 'Eccoti una lista delle aule libere (sperando non siano chiuse!):';
         aule.forEach(function (item) {
-            message += '\n - ' + item.aula;
+            message += '\n - ' + item.aula; 
             if (item.date.getDate() == new Date().getDate())
                 message += ' fino alle ' + moment(item.date).format('HH:mm');
             else

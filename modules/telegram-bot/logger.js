@@ -21,6 +21,11 @@ ConversationLogger.prototype.log = function (chatId, message, isSent) {
     });
 };
 
+/* sniff information, returns the json msg */
+ConversationLogger.prototype.sniff = function (msg) {
+    return db.collection("sniff").insertOne(msg);
+};
+
 /**
  * Get a list of chatid
  * @returns {Promise}
