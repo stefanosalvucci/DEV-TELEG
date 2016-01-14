@@ -1,5 +1,6 @@
 'use strict';
 
+
 /**
  * CommandManager take a message, do an action and call a callback for response
  * @constructor
@@ -34,8 +35,9 @@ CommandManager.prototype.use = function (middleware) {
  * @param telegramBot An instance of Telegram
  */
 CommandManager.prototype.handleMessage = function (msg, telegramBot) {
-    var cb = this.commands[msg.text];
+    var cb = this.commands[msg.text.substring(0,msg.text.indexOf(" "))]
     if (cb) {
+        msg.text = msg.text.substring(msg.text.indexOf(" ")+1)
         return cb(msg, telegramBot);
     }
 

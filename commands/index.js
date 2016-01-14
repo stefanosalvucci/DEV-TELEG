@@ -1,3 +1,5 @@
+const CHAT_GROUP_ID = -69948627;
+
 'use strict';
 
 var moment = require('moment');
@@ -17,19 +19,16 @@ var handleError = function (err, msg, telegramBot) {
 
 var listaComandi = '/insulted - Insulta i tuoi amici!' +
     '\n/spotted - Apprezza qualcuno, potresti essere ricambiato!' +
-    '\n/claim - Ottieni un indizio, e scopri chi ti ha pensato!' +    
+    '\n/claim - Ottieni un indizio, e scopri chi ti ha pensato!' +
     '\n/dimenticami - Elimina le tue informazioni personali' +
     '\n/help - Mostra la lista dei comandi disponibili';
 
 /* accept variables */
-var accept = '/accetta - Accetta le condizioni di utilizzo del Bot Insulted Roma Tre \n';
 var isAccepted = false; //verifica se hai accettato i termini
-var CHAT_GROUP_ID = -69948627; 
 
 /* comandi start e accetta: start non può essere ripetuto, NOTA: metti in ogni metodo il controllo su isAccepted */
 function start_action(msg, telegramBot) {
-    telegramBot.sendMessage(msg.chat.id, "Benvenuto! Questo bot ti permette di insultare o spottare una persona in anonimato! Le tue informazioni non verranno trasmesse ad anima viva! Accetta i termini e buon divertimento! " +
-        '\n' + accept);  
+    telegramBot.sendMessage(msg.chat.id, "Benvenuto! Questo bot ti permette di insultare o spottare una persona in anonimato! Le tue informazioni non verranno trasmesse ad anima viva! Accetta i termini e buon divertimento!\n /accetta - Accetta le condizioni di utilizzo del Bot Insulted Roma Tre");
 }
 
 commands.on('/start', function (msg, telegramBot) {
@@ -40,7 +39,7 @@ commands.on('/accetta', function (msg, telegramBot) {
     if (isAccepted) {
         telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
     }
-    else { 
+    else {
         telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
         isAccepted = true;
     }
@@ -50,26 +49,64 @@ commands.on('/help', function (msg, telegramBot) {
     if (isAccepted) {
         telegramBot.sendMessage(msg.chat.id, 'Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
     }
-    else { 
+    else {
         start_action(msg, telegramBot);
     }
 });
 
 
 commands.on('/insulted', function (msg, telegramBot) {
-    var lastMessage = db.collection("sniff").find().sort({message_id:-1}).limit(1);
-    console.log(db.collection("sniff"));
-    /*
-    var text_message = "Insulto #" + msg.from.id + msg.text;
-    telegramBot.sendMessage(CHAT_GROUP_ID, msg.text); */
+    // var lastMessage = db.collection("sniff").find().sort({message_id:-1}).limit(1);
+    // //console.log(db.collection("sniff"));
+    // console.log(msg.message_id);
+
+    var text_message = "Insulto #" + msg.message_id + "\n" + msg.text;
+    telegramBot.sendMessage(CHAT_GROUP_ID, text_message);
 
     /*if (isAccepted) {
         telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
     }
-    else { 
+    else {
         telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
         isAccepted = true;
     } */
+});
+
+commands.on('/claim', function (msg, telegramBot) {
+    var text_message;
+    var message_id;
+
+    if (msg.text.indexOf("#") === 0){
+        msg.text = msg.text.substring(1);
+    }
+    message_id = Number(msg.text);
+
+    if (msg.chat.id !==  CHAT_GROUP_ID) {
+        if (!isNaN(message_id)) {
+            text_message = "Per sapere chi ha scritto il messaggio #" + message_id +" devi eseguire il comando /sendClaim seguito dal numero di cellulare su cui ti invieremo il nome della persona che ha scritto il messaggio #"+ message_id + "\n" +
+                "Il messaggio è gratuito, nessun costo vi verrà addebitato.\n" +
+                "Esempio: \n" +
+                "/sendClaim 3351234567 #";
+        }else{
+            text_message = "Errore! id messaggio non valido!"
+        }
+    }else{
+        text_message = "Solo in privato posso rivelarti chi ha scritto il messaggio #" + message_id ;
+    }
+
+    telegramBot.sendMessage(msg.chat.id, text_message);
+
+    /*if (isAccepted) {
+        telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
+    }
+    else {
+        telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
+        isAccepted = true;
+    } */
+});
+
+commands.on('/sendclaim', function (msg, telegramBot) {
+    telegramBot.sendMessage(msg.chat.id, "funziona");
 });
 
 /*
@@ -86,7 +123,7 @@ commands.on('/aulelibere', function (msg, telegramBot) {
 
         message = 'Eccoti una lista delle aule libere (sperando non siano chiuse!):';
         aule.forEach(function (item) {
-            message += '\n - ' + item.aula; 
+            message += '\n - ' + item.aula;
             if (item.date.getDate() == new Date().getDate())
                 message += ' fino alle ' + moment(item.date).format('HH:mm');
             else
@@ -131,7 +168,7 @@ commands.on('/grazie', function (msg, telegramBot) {
 //commands.on('/debug', function (msg, telegramBot) {
 //});
 
-commands.on('/default', function (msg, telegramBot) {    
+commands.on('/default', function (msg, telegramBot) {
     if (msg.chat.id !==  CHAT_GROUP_ID) {
         var message = '';
         var rand = Math.floor(Math.random() * 5);
