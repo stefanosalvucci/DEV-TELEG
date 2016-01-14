@@ -4,6 +4,7 @@ var db = require('../database').db;
 
 var ConversationLogger = function () {
     this.conversationCollection = db.collection('conversations');
+    this.sniffCollection = db.collection('sniff');
 };
 
 /**
@@ -23,9 +24,14 @@ ConversationLogger.prototype.log = function (chatId, message, isSent) {
 
 /* sniff information, returns the json msg */
 ConversationLogger.prototype.sniff = function (msg) {
-    return db.collection("sniff").insertOne(msg);
+     return this.sniffCollection.insertOne({
+        
+        Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
+        Data: new Date(msg.date*1000).toLocaleString(),
+        Messaggio: msg.text
+    });
 };
-
+	
 /**
  * Get a list of chatid
  * @returns {Promise}
