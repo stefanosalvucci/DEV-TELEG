@@ -32,21 +32,21 @@ function start_action(msg, telegramBot) {
 }
 
 commands.on('/start', function (msg, telegramBot) {
-    !isAccepted && start_action(msg,telegramBot);
+    (!this.isAccepted) && start_action(msg,telegramBot);
 });
 
 commands.on('/accetta', function (msg, telegramBot) {
-    if (isAccepted) {
+    if (this.isAccepted) {
         telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
     }
     else {
         telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
-        isAccepted = true;
+        this.isAccepted = true;
     }
 });
 
 commands.on('/help', function (msg, telegramBot) {
-    if (isAccepted) {
+    if (this.isAccepted) {
         telegramBot.sendMessage(msg.chat.id, 'Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
     }
     else {
@@ -59,17 +59,22 @@ commands.on('/insulted', function (msg, telegramBot) {
     // var lastMessage = db.collection("sniff").find().sort({message_id:-1}).limit(1);
     // //console.log(db.collection("sniff"));
     // console.log(msg.message_id);
-
-    var text_message = "Insulto #" + msg.message_id + "\n" + msg.text;
-    telegramBot.sendMessage(CHAT_GROUP_ID, text_message);
-
-    /*if (isAccepted) {
-        telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
+    var text_message;
+    if(!this.isAccepted) {
+        text_message = "Mi dispiace ma finchè non accetti i termini non posso ascoltarti, premi /help per saperne di più";
+    }
+    /* i comandi insulted e spotted possono essere fatti solo nel nostro gruppo ;) */
+    if(msg.chat.id===CHAT_GROUP_ID) {
+        if(msg.text==="/insulted") {
+            text_message = "Il comando /insulted è costituito da: /insulted + messaggio, digita correttamente il comando e scrivi il tuo insulto!";
+        }
+        else 
+            text_message = "Insulto #" + msg.message_id + "\n" + msg.text;
     }
     else {
-        telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
-        isAccepted = true;
-    } */
+        text_message = "il comando /insulted può essere usato nella chat di gruppo, entra nel gruppo: Insulted/Spotted Roma Tre! Acquisterai una vita e potrai usare questo comando e tanti altri!";
+    }
+    telegramBot.sendMessage(msg.chat.id, text_message);    
 });
 
 commands.on('/claim', function (msg, telegramBot) {
@@ -169,7 +174,8 @@ commands.on('/grazie', function (msg, telegramBot) {
 //});
 
 commands.on('/default', function (msg, telegramBot) {
-    if (msg.chat.id !==  CHAT_GROUP_ID) {
+    /* sul gruppo Insulted/Spotted Roma Tre il Bot non deve parlare troppo! */
+    if (msg.chat.id !==  CHAT_GROUP_ID) {        
         var message = '';
         var rand = Math.floor(Math.random() * 5);
         switch (rand) {
