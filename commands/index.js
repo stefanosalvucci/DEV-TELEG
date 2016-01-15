@@ -88,10 +88,10 @@ commands.on('/claim', function (msg, telegramBot) {
                 "Esempio: \n" +
                 "/sendClaim 3351234567 #";
         }else{
-            text_message = "Errore! id messaggio non valido!"
+            text_message = "Errore! Inserire un ID del messaggio valido!"
         }
     }else{
-        text_message = "Solo in privato posso rivelarti chi ha scritto il messaggio #" + message_id ;
+        text_message = "Solo in privato posso rivelarti chi ha scritto il messaggio";
     }
 
     telegramBot.sendMessage(msg.chat.id, text_message);
