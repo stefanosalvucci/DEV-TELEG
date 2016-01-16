@@ -74,7 +74,7 @@ commands.on('/insulted', function (msg, telegramBot) {
     else {
         text_message = "il comando /insulted può essere usato nella chat di gruppo, entra nel gruppo: Insulted/Spotted Roma Tre! Acquisterai una vita e potrai usare questo comando e tanti altri!";
     }
-    telegramBot.sendMessage(msg.chat.id, text_message);    
+    telegramBot.sendMessage(msg.chat.id, text_message);
 });
 
 commands.on('/claim', function (msg, telegramBot) {
