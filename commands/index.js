@@ -23,31 +23,53 @@ var listaComandi = '/insult - Insulta i tuoi amici!' +
     '\n/exit - Elimina le tue informazioni personali' +
     '\n/help - Mostra la lista dei comandi disponibili';
 
-/* accept variables */
-var isAccepted = false; //verifica se hai accettato i termini
+
+// NOT WORKING, UNDERSTAND PROMISES BEFORE
+function hasAccepted(userId){
+    var user = new User(userId);
+    user.getUser().then(function(user){
+        return Promise.resolve(user.hasAccepted);
+    });
+};
+
+function setAccepted(userId){
+    var user = new User(userId);
+    user.getUser().then(function(){
+        user.update({hasAccepted: true});
+    });
+};
 
 /* comandi start e accetta: start non può essere ripetuto, NOTA: metti in ogni metodo il controllo su isAccepted */
 function start_action(msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, "Benvenuto! Questo bot ti permette di insultare o spottare una persona in anonimato! Le tue informazioni non verranno trasmesse ad anima viva! Accetta i termini e buon divertimento!\n /accept - Accetta le condizioni di utilizzo del Bot Insulted Roma Tre");
-}
+};
 
 commands.on('/start', function (msg, telegramBot) {
-    (!this.isAccepted) && start_action(msg,telegramBot);
+    var user = new User(msg.chat.id, telegramBot, msg.from.first_name, msg.from.last_name, msg.from.username);
+    user.addToDb();
+    start_action(msg,telegramBot);
 });
 
 commands.on('/accept', function (msg, telegramBot) {
-    if (this.isAccepted) {
-        telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
-    }
-    else {
-        telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
-        this.isAccepted = true;
-        User.newUser(msg);
-    }
+
+  // UNDERSTAND IF HAS_ACCEPTED
+  // console.log('w il cioccolato');
+  // hasAccepted(msg.chat.id).then(function(hasAccepted){
+  //   console.log(hasAccepted)
+  // });
+
+  if (hasAccepted(msg.chat.id)) {
+    telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
+  }
+  else {
+    telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
+    setAccepted(msg.chat.id);
+
+  }
 });
 
 commands.on('/help', function (msg, telegramBot) {
-    if (this.isAccepted) {
+    if (hasAccepted(msg.chat.id)) {
         telegramBot.sendMessage(msg.chat.id, 'Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
     }
     else {
@@ -66,7 +88,7 @@ commands.on('/insult', function (msg, telegramBot) {
     // console.log(msg.message_id);
     var text_message;
     var chat_id = msg.chat.id;
-    if(!this.isAccepted) {
+    if(!hasAccepted(msg.chat.id)) {
         text_message = "Mi dispiace ma finchè non accetti i termini non posso ascoltarti, premi /help per saperne di più";
     }
 

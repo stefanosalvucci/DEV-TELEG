@@ -56,14 +56,7 @@ User.prototype.update = function (update) {
  * @returns {Promise}
  */
 User.prototype.getUser = function () {
-    var collection = this.collection;
-    var telegramId = this.telegramId;
-    return collection.find({telegramId: telegramId}).limit(1).next().then(function (user) {
-        if (user == null) {
-            return collection.insertOne({
-                telegramId: telegramId
-            });
-        }
+    return this.collection.find({telegramId: this.telegramId}).limit(1).next().then(function (user) {
         return Promise.resolve(user);
     });
 };
@@ -93,13 +86,14 @@ User.prototype.forget = function () {
  * @param {object} user Object User
  * @returns {Promise}
  */
-User.prototype.newUser = function (utente) {
+User.prototype.addToDb = function() {
   return this.collection.insertOne({
-    telegramId: utente.telegramId,
-    firstName: utente.firstName,
-    lastName: utente.lastName,
-    username: utente.username,
-    lives: 3
+    telegramId: this.telegramId,
+    firstName: this.firstName,
+    lastName: this.lastName,
+    username: this.username,
+    lives: 3,
+    hasAccepted: false
   });
 };
 
