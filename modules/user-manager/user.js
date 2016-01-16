@@ -9,9 +9,12 @@ var speaker = require('../speaker');
  * @param telegramBot
  * @constructor
  */
-var User = function (telegramId, telegramBot) {
+var User = function (telegramId, telegramBot, firstName, lastName, username) {
     this.telegramBot = telegramBot;
     this.telegramId = telegramId;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.username = username;
     this.collection = database.collection('users');
 };
 
@@ -90,8 +93,14 @@ User.prototype.forget = function () {
  * @param {object} user Object User
  * @returns {Promise}
  */
-/*User.prototype.newUser = function (user) {
- return this.collection.insertOne(user);
- };*/
+User.prototype.newUser = function (utente) {
+  return this.collection.insertOne({
+    telegramId: utente.telegramId,
+    firstName: utente.firstName,
+    lastName: utente.lastName,
+    username: utente.username,
+    lives: 3
+  });
+};
 
 module.exports = User;
