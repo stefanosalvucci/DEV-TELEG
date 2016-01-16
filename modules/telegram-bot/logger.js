@@ -8,8 +8,8 @@ var ConversationLogger = function () {
     this.conversationCollection = db.collection('conversations');
     this.privateConversationCollection = db.collection('privateConversations');
     this.sniffCollection = db.collection('sniff'); //non servirà più
-    this.insultedSpottedCollection = db.collection('insultedSpotted');
-   
+    this.groupCollection = db.collection('groupConversations');
+    this.insultedCollection = db.collection('insulted');   
 };
 
 /**
@@ -38,12 +38,12 @@ ConversationLogger.prototype.sniff = function (msg) {
 
 /* Salvo sulla collection del gruppo Insulted/Spotted Roma Tre */
 ConversationLogger.prototype.sniffInfoGruppo = function (msg){    
-  (msg.chat.id===CHAT_GROUP_ID) && this.insultedSpottedCollection.insertOne({
+  (msg.chat.id===CHAT_GROUP_ID) && this.groupCollection.insertOne({
       Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
       Data: new Date(msg.date*1000).toLocaleString(),
       Messaggio: msg.text,
       Message_ID: msg.message_id
-    });     
+    });  
 };
 
 /* Salvo sulla collection privata */
@@ -52,6 +52,16 @@ ConversationLogger.prototype.sniffInfoPrivato = function (msg){
       Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
       Data: new Date(msg.date*1000).toLocaleString(),
       Messaggio: msg.text
+    }); 
+};
+
+/* Salvo sulla collection insulted gli insulti */
+ConversationLogger.prototype.sniffInsulted = function (msg){
+  (msg.chat.id!==CHAT_GROUP_ID) && (msg.text.substring(0,8)==="/insult ") && (msg.text.length>17) && this.insultedCollection.insertOne({
+      Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
+      Data: new Date(msg.date*1000).toLocaleString(),
+      Messaggio: msg.text.substring(8),
+      ID: msg.message_id
     }); 
 };
 	

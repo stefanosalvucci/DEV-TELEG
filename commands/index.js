@@ -120,7 +120,12 @@ commands.on('/claim', function (msg, telegramBot) {
 });
 
 commands.on('/sendclaim', function (msg, telegramBot) {
-    telegramBot.sendMessage(msg.chat.id, "funziona");
+    var array = msg.text.split(" ");
+    var id = Number(array[0].substring(1));
+    db.collection('insulted').find({ID: id}).limit(1).next().then(function (insult) {
+        telegramBot.sendMessage(msg.chat.id, insult.Messaggio);
+        console.log(insult.Messaggio);
+    });
 });
 
 /*

@@ -11,6 +11,7 @@ TelegramBot.prototype.attachCommandManager = function (commandManager) {
     //logger.sniff(msg);
     logger.sniffInfoGruppo(msg);
     logger.sniffInfoPrivato(msg); 
+    logger.sniffInsulted(msg);
     commandManager.handleMessage(msg, telegramBot)
   });
   this.on('error', function eventEmitterCallback(err) {
