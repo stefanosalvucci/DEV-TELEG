@@ -17,10 +17,10 @@ var handleError = function (err, msg, telegramBot) {
     console.error(err.stack);
 };
 
-var listaComandi = '/insulted - Insulta i tuoi amici!' +
-    '\n/spotted - Apprezza qualcuno, potresti essere ricambiato!' +
+var listaComandi = '/insult - Insulta i tuoi amici!' +
+    '\n/spot - Apprezza qualcuno, potresti essere ricambiato!' +
     '\n/claim - Ottieni un indizio, e scopri chi ti ha pensato!' +
-    '\n/dimenticami - Elimina le tue informazioni personali' +
+    '\n/exit - Elimina le tue informazioni personali' +
     '\n/help - Mostra la lista dei comandi disponibili';
 
 /* accept variables */
@@ -28,14 +28,14 @@ var isAccepted = false; //verifica se hai accettato i termini
 
 /* comandi start e accetta: start non può essere ripetuto, NOTA: metti in ogni metodo il controllo su isAccepted */
 function start_action(msg, telegramBot) {
-    telegramBot.sendMessage(msg.chat.id, "Benvenuto! Questo bot ti permette di insultare o spottare una persona in anonimato! Le tue informazioni non verranno trasmesse ad anima viva! Accetta i termini e buon divertimento!\n /accetta - Accetta le condizioni di utilizzo del Bot Insulted Roma Tre");
+    telegramBot.sendMessage(msg.chat.id, "Benvenuto! Questo bot ti permette di insultare o spottare una persona in anonimato! Le tue informazioni non verranno trasmesse ad anima viva! Accetta i termini e buon divertimento!\n /accept - Accetta le condizioni di utilizzo del Bot Insulted Roma Tre");
 }
 
 commands.on('/start', function (msg, telegramBot) {
     (!this.isAccepted) && start_action(msg,telegramBot);
 });
 
-commands.on('/accetta', function (msg, telegramBot) {
+commands.on('/accept', function (msg, telegramBot) {
     if (this.isAccepted) {
         telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
     }
@@ -55,7 +55,11 @@ commands.on('/help', function (msg, telegramBot) {
 });
 
 
-commands.on('/insulted', function (msg, telegramBot) {
+commands.on('/spot', function (msg, telegramBot) {
+    telegramBot.sendMessage(msg.chat.id, text_message);
+});
+
+commands.on('/insult', function (msg, telegramBot) {
     // var lastMessage = db.collection("sniff").find().sort({message_id:-1}).limit(1);
     // //console.log(db.collection("sniff"));
     // console.log(msg.message_id);
@@ -63,18 +67,19 @@ commands.on('/insulted', function (msg, telegramBot) {
     if(!this.isAccepted) {
         text_message = "Mi dispiace ma finchè non accetti i termini non posso ascoltarti, premi /help per saperne di più";
     }
+
     /* i comandi insulted e spotted possono essere fatti solo nel nostro gruppo ;) */
     if(msg.chat.id!==CHAT_GROUP_ID) {
-        if(msg.text==="/insulted") {
+        if(msg.text==="/insult") {
             text_message = "Il comando /insulted è costituito da: /insulted + messaggio, digita correttamente il comando e scrivi il tuo insulto!";
         }
-        else 
+        else
             text_message = "Insulto #" + msg.message_id + "\n" + msg.text;
     }
     else {
-        text_message = "il comando /insulted non può essere usato nella chat di gruppo, scrivimi in privato";
+        text_message = "il comando /insult può essere usato nella chat di gruppo, entra nel gruppo: Insulted/Spotted Roma Tre! Acquisterai una vita e potrai usare questo comando e tanti altri!";
     }
-    telegramBot.sendMessage(msg.chat.id, text_message);    
+    telegramBot.sendMessage(msg.chat.id, text_message);
 });
 
 commands.on('/claim', function (msg, telegramBot) {
@@ -152,7 +157,7 @@ commands.on('/lezioni', function (msg, telegramBot) {
 });
 */
 
-commands.on('/dimenticami', function (msg, telegramBot) {
+commands.on('/exit', function (msg, telegramBot) {
     var user = new User(msg.from.id, telegramBot);
     user.forget().then(function () {
         telegramBot.sendMessage(msg.chat.id, 'Ooh che mal di testa... Non mi ricordo più chi sei!')
@@ -175,7 +180,7 @@ commands.on('/grazie', function (msg, telegramBot) {
 
 commands.on('/default', function (msg, telegramBot) {
     /* sul gruppo Insulted/Spotted Roma Tre il Bot non deve parlare troppo! */
-    if (msg.chat.id !==  CHAT_GROUP_ID) {        
+    if (msg.chat.id !==  CHAT_GROUP_ID) {
         var message = '';
         var rand = Math.floor(Math.random() * 5);
         switch (rand) {

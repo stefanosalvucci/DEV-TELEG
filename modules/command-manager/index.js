@@ -35,9 +35,9 @@ CommandManager.prototype.use = function (middleware) {
  * @param telegramBot An instance of Telegram
  */
 CommandManager.prototype.handleMessage = function (msg, telegramBot) {
-    var cb = this.commands[msg.text.substring(0,msg.text.indexOf(" "))] || this.commands[msg.text.substring(0)]
+    var cb = this.commands[msg.text.substring(0,msg.text.indexOf(" "))] || this.commands[msg.text]
     if (cb) {
-        msg.text = msg.text.substring(msg.text.indexOf(" ")+1)
+        msg.text = msg.text.substring(cb.length+1)
         return cb(msg, telegramBot);
     }
 
