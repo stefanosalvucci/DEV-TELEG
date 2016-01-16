@@ -64,7 +64,7 @@ commands.on('/insulted', function (msg, telegramBot) {
         text_message = "Mi dispiace ma finchè non accetti i termini non posso ascoltarti, premi /help per saperne di più";
     }
     /* i comandi insulted e spotted possono essere fatti solo nel nostro gruppo ;) */
-    if(msg.chat.id===CHAT_GROUP_ID) {
+    if(msg.chat.id!==CHAT_GROUP_ID) {
         if(msg.text==="/insulted") {
             text_message = "Il comando /insulted è costituito da: /insulted + messaggio, digita correttamente il comando e scrivi il tuo insulto!";
         }
@@ -72,7 +72,7 @@ commands.on('/insulted', function (msg, telegramBot) {
             text_message = "Insulto #" + msg.message_id + "\n" + msg.text;
     }
     else {
-        text_message = "il comando /insulted può essere usato nella chat di gruppo, entra nel gruppo: Insulted/Spotted Roma Tre! Acquisterai una vita e potrai usare questo comando e tanti altri!";
+        text_message = "il comando /insulted non può essere usato nella chat di gruppo, scrivimi in privato";
     }
     telegramBot.sendMessage(msg.chat.id, text_message);    
 });
@@ -143,8 +143,8 @@ commands.on('/aulelibere', function (msg, telegramBot) {
         else
             handleError(err, msg, telegramBot);
     });
-});
-*/
+}); */
+    
 /*
 commands.on('/lezioni', function (msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, 'Mi dispiace, ma gli scansafatiche del LUG Roma Tre ancora non mi hanno' +
@@ -196,6 +196,6 @@ commands.on('/default', function (msg, telegramBot) {
                 break;
         }
         message += '\n\nDigita /help per la lista dei comandi disponibili!';
-        telegramBot.sendMessage(msg.chat.id, message);
+        //telegramBot.sendMessage(msg.chat.id, message);
     }
 });

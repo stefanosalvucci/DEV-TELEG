@@ -18,11 +18,11 @@ var ConversationLogger = function () {
  * @param {boolean} isSent
  * @returns {Promise} */
 ConversationLogger.prototype.log = function (chatId, message, isSent) {
-    return this.conversationCollection.insertOne({
-        message: message,
-        chatId: chatId,
-        isSent: isSent
-    });
+  return this.conversationCollection.insertOne({
+      message: message,
+      chatId: chatId,
+      isSent: isSent
+  });
 }; 
 
 /* sniff information, returns the json msg, penso non serve + 
