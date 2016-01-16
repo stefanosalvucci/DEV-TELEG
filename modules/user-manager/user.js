@@ -99,7 +99,8 @@ User.prototype.addToDb = function() {
     firstName: this.firstName,
     lastName: this.lastName,
     username: this.username,
-    lives: 3
+    lives: 3,
+    hasAccepted: true
   });
 };
 

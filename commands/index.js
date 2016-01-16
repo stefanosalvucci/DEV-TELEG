@@ -36,17 +36,16 @@ commands.on('/start', function (msg, telegramBot) {
 });
 
 commands.on('/accept', function (msg, telegramBot) {
-    var user = new User(msg.chat.id, telegramBot, msg.from.first_name, msg.from.last_name, msg.from.username)
+  if (this.isAccepted) {
+    telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
+  }
+  else {
+    telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
+    this.isAccepted = true;
+    var user = new User(msg.chat.id, telegramBot, msg.from.first_name, msg.from.last_name, msg.from.username);
     user.addToDb();
 
-    if (this.isAccepted) {
-        telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
-    }
-    else {
-        telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
-        this.isAccepted = true;
-
-    }
+  }
 });
 
 commands.on('/help', function (msg, telegramBot) {
