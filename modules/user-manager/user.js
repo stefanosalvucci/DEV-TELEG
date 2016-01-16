@@ -93,12 +93,12 @@ User.prototype.forget = function () {
  * @param {object} user Object User
  * @returns {Promise}
  */
-User.prototype.newUser = function (utente) {
+User.prototype.addToDb = function() {
   return this.collection.insertOne({
-    telegramId: utente.telegramId,
-    firstName: utente.firstName,
-    lastName: utente.lastName,
-    username: utente.username,
+    telegramId: this.telegramId,
+    firstName: this.firstName,
+    lastName: this.lastName,
+    username: this.username,
     lives: 3
   });
 };
