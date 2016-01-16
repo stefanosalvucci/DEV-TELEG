@@ -42,6 +42,7 @@ commands.on('/accept', function (msg, telegramBot) {
     else {
         telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
         this.isAccepted = true;
+        User.newUser(msg);
     }
 });
 
