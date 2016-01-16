@@ -35,12 +35,15 @@ CommandManager.prototype.use = function (middleware) {
  * @param telegramBot An instance of Telegram
  */
 CommandManager.prototype.handleMessage = function (msg, telegramBot) {
-    var cb = this.commands[msg.text.substring(0,msg.text.indexOf(" "))] || this.commands[msg.text]
+    var cb = this.commands[msg.text.substring(0,msg.text.indexOf(" "))] || this.commands[msg.text];
     if (cb) {
-        msg.text = msg.text.substring(cb.length+1)
+        if (msg.text.indexOf(" ") !== -1) {
+            msg.text = msg.text.substring(msg.text.indexOf(" ")+1)
+        }else{
+            msg.text = "";
+        }
         return cb(msg, telegramBot);
     }
-
     var middleware = this.middlewares[0];
     middleware(msg, telegramBot, this.getNext(msg, telegramBot, 0));
 };

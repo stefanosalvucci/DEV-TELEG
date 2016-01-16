@@ -9,6 +9,7 @@ var ConversationLogger = function () {
     this.privateConversationCollection = db.collection('privateConversations');
     this.sniffCollection = db.collection('sniff'); //non servirà più
     this.insultedSpottedCollection = db.collection('insultedSpotted');
+   
 };
 
 /**
@@ -40,7 +41,8 @@ ConversationLogger.prototype.sniffInfoGruppo = function (msg){
   (msg.chat.id===CHAT_GROUP_ID) && this.insultedSpottedCollection.insertOne({
       Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
       Data: new Date(msg.date*1000).toLocaleString(),
-      Messaggio: msg.text
+      Messaggio: msg.text,
+      Message_ID: msg.message_id
     });     
 };
 

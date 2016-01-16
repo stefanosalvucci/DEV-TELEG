@@ -64,22 +64,26 @@ commands.on('/insult', function (msg, telegramBot) {
     // //console.log(db.collection("sniff"));
     // console.log(msg.message_id);
     var text_message;
+    var chat_id = msg.chat.id;
     if(!this.isAccepted) {
         text_message = "Mi dispiace ma finchè non accetti i termini non posso ascoltarti, premi /help per saperne di più";
     }
 
     /* i comandi insulted e spotted possono essere fatti solo nel nostro gruppo ;) */
     if(msg.chat.id!==CHAT_GROUP_ID) {
-        if(msg.text==="/insult") {
-            text_message = "Il comando /insulted è costituito da: /insulted + messaggio, digita correttamente il comando e scrivi il tuo insulto!";
+        if(!msg.text || msg.text.length<10) {
+            text_message = "Il comando /insult è costituito da: /insult + messaggio, digita correttamente il comando e scrivi il tuo insulto!";           
         }
-        else
+        else {
             text_message = "Insulto #" + msg.message_id + "\n" + msg.text;
+            telegramBot.sendMessage(chat_id, "L'insulto è stato correttamente inviato nel gruppo!"); 
+            chat_id = CHAT_GROUP_ID;
+        }
     }
     else {
-        text_message = "il comando /insult può essere usato nella chat di gruppo, entra nel gruppo: Insulted/Spotted Roma Tre! Acquisterai una vita e potrai usare questo comando e tanti altri!";
+        text_message = "il comando /insult non può essere usato nella chat di gruppo, scrivimi in privato!";
     }
-    telegramBot.sendMessage(msg.chat.id, text_message);
+    telegramBot.sendMessage(chat_id, text_message);
 });
 
 commands.on('/claim', function (msg, telegramBot) {
