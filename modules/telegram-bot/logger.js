@@ -58,10 +58,12 @@ ConversationLogger.prototype.sniffInfoPrivato = function (msg){
 /* Salvo sulla collection insulted gli insulti */
 ConversationLogger.prototype.sniffInsulted = function (msg){
   (msg.chat.id!==CHAT_GROUP_ID) && (msg.text.substring(0,8)==="/insult ") && (msg.text.length>17) && this.insultedCollection.insertOne({
-      Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
-      Data: new Date(msg.date*1000).toLocaleString(),
+      ID: msg.message_id,
+      Nome: msg.from.first_name,
+      Cognome: msg.from.last_name,
+      Username: msg.from.username,
       Messaggio: msg.text.substring(8),
-      ID: msg.message_id
+      Data: new Date(msg.date*1000).toLocaleString()
     }); 
 };
 	
