@@ -26,6 +26,8 @@
 
 ### Comandi:
 
-- `/aulelibere` - Mostra le aule libere adesso
-- `/dimenticami` - Elimina le tue informazioni personali
+- `/insult` - Insulta i tuoi amici!
+- `/spot` - Apprezza qualcuno, potresti essere ricambiato!
+- `/claim` - Ottieni un indizio, e scopri chi ti ha pensato!
+- `/exit` - Elimina le tue informazioni personali
 - `/help` - Mostra la lista dei comandi disponibili
