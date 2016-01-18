@@ -10,7 +10,6 @@ var ConversationLogger = function () {
     this.sniffCollection = db.collection('sniff'); //non servirà più
     this.groupCollection = db.collection('groupConversations');
     this.insultedCollection = db.collection('insulted');  
-    this.usersCollection = db.collection('users'); 
 };
 
 /**

@@ -1,4 +1,4 @@
-const CHAT_GROUP_ID = -69948627;
+        const CHAT_GROUP_ID = -69948627;
 
 'use strict';
 
@@ -26,10 +26,10 @@ var listaComandi = '/insult - Insulta i tuoi amici!' +
 /* Controlla se l'utente ha accettato le condizioni */
 function hasAccepted(userId){
     var user = new User(userId);
-    user.getUser().then(function(user){
+    user.collection.find({telegramId: user.telegramId}).limit(1).next().then(function(user){
         return user.hasAccepted;
     });
-};
+};  
 
 /* Se l'utente ha accettato le condizioni, setta il parametro 'hasAccepted' a true */
 function setAccepted(userId){
@@ -46,23 +46,27 @@ function start_action(msg, telegramBot) {
 
 commands.on('/start', function (msg, telegramBot) {
     var user = new User(msg.chat.id, telegramBot, msg.from.first_name, msg.from.last_name, msg.from.username);
-    var promise = user.getUser();
-    if(promise != user) {
-        //console.log(promise);
-        console.log(user);
-        user.addToDb();
-    }    
     start_action(msg,telegramBot);
+    user.collection.find({telegramId: user.telegramId}).limit(1).next().then(function (User) {
+        (User===null) && user.addToDb();
+    });
 });
 
 commands.on('/accept', function (msg, telegramBot) {
-  if (hasAccepted(msg.chat.id)) {
-    telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
-  }
-  else {
-    telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
-    setAccepted(msg.chat.id);
-  }
+    db.collection('users').find({telegramId: msg.chat.id}).limit(1).next().then(function(user){
+        if(user===null) {
+            telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
+        }
+        else {    
+            if(user.hasAccepted) {
+                telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
+            }    
+            else {
+                telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
+                setAccepted(msg.chat.id);
+            }
+        }    
+    });
 });
 
 commands.on('/help', function (msg, telegramBot) {
