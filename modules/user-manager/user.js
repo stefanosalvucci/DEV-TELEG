@@ -56,7 +56,7 @@ User.prototype.update = function (update) {
  * @returns {Promise}
  */
 User.prototype.getUser = function () {
-    return this.collection.find({telegramId: this.telegramId}).limit(1).next().then(function (user) {
+    this.collection.find({telegramId: this.telegramId}).limit(1).next().then(function (user) {
         return Promise.resolve(user);
     });
 };
