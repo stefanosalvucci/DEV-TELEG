@@ -26,18 +26,18 @@ ConversationLogger.prototype.log = function (chatId, message, isSent) {
   });
 }; 
 
-/* sniff information, returns the json msg, penso non serve + 
+/* sniff information, returns the json msg, penso non serve +
 ConversationLogger.prototype.sniff = function (msg) {
      return this.sniffCollection.insertOne({
-        
+          
         Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
         Data: new Date(msg.date*1000).toLocaleString(),
         Messaggio: msg.text
     });
-}; */
+};  */
 
 /* Salvo sulla collection del gruppo Insulted/Spotted Roma Tre */
-ConversationLogger.prototype.sniffInfoGruppo = function (msg){    
+ConversationLogger.prototype.sniffInfoGruppo = function (msg){ 
   (msg.chat.id===CHAT_GROUP_ID) && this.groupCollection.insertOne({
       Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
       Data: new Date(msg.date*1000).toLocaleString(),

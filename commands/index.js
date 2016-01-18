@@ -29,7 +29,7 @@ function hasAccepted(userId){
     user.collection.find({telegramId: user.telegramId}).limit(1).next().then(function(user){
         return user.hasAccepted;
     });
-};  
+};   
 
 /* Se l'utente ha accettato le condizioni, setta il parametro 'hasAccepted' a true */
 function setAccepted(userId){
@@ -70,12 +70,18 @@ commands.on('/accept', function (msg, telegramBot) {
 });
 
 commands.on('/help', function (msg, telegramBot) {
-    if (hasAccepted(msg.chat.id)) {
-        telegramBot.sendMessage(msg.chat.id, 'Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
-    }
-    else {
-        start_action(msg, telegramBot);
-    }
+    db.collection('users').find({telegramId: msg.chat.id}).limit(1).next().then(function(user){
+        if(user===null) {
+            telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
+        }
+        if (user.hasAccepted) {
+            telegramBot.sendMessage(msg.chat.id, "Regole del gioco: \nHai a disposizione 3 vite iniziali, il comando /claim costa una vita. Per guadagnare altre vite basta invitare un amico sul gruppo: Insulted/Spotted Roma tre.\nBuon divertimento! \n\n " +
+            "Ecco la lista delle cose che puoi chiedermi:\n" + listaComandi);
+        }   
+        else {
+            start_action(msg, telegramBot);
+        }
+    });
 });
 
 
@@ -84,43 +90,46 @@ commands.on('/spot', function (msg, telegramBot) {
 });
 
 commands.on('/insult', function (msg, telegramBot) {
-    // var lastMessage = db.collection("sniff").find().sort({message_id:-1}).limit(1);
-    // //console.log(db.collection("sniff"));
-    // console.log(msg.message_id);
     var text_message;
     var chat_id = msg.chat.id;
-    if(!hasAccepted(msg.chat.id)) {
-        text_message = "Mi dispiace ma finchè non accetti i termini non posso ascoltarti, premi /help per saperne di più";
-    }
-
-    /* i comandi insulted e spotted possono essere fatti solo nel nostro gruppo ;) */
-    if(msg.chat.id!==CHAT_GROUP_ID) {
-        if(!msg.text || msg.text.length<10) {
-            text_message = "Il comando /insult è costituito da: /insult + messaggio, digita correttamente il comando e scrivi il tuo insulto!";           
+    db.collection('users').find({telegramId: msg.chat.id}).limit(1).next().then(function(user) {
+        /* controllo se l'user ha accettato i termini o non ha fatto start */
+        if(user===null) {
+            return telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
+        }
+        if(!user.hasAccepted) {
+                return telegramBot.sendMessage(msg.chat.id, "Non hai ancora accettato i termini, digita il comando /accept");
         }
         else {
-            text_message = "Insulto #" + msg.message_id + "\n" + msg.text;
-            telegramBot.sendMessage(chat_id, "L'insulto è stato correttamente inviato nel gruppo!"); 
-            chat_id = CHAT_GROUP_ID;
-        }
-    }
-    else {
-        text_message = "il comando /insult non può essere usato nella chat di gruppo, scrivimi in privato!";
-    }
-    telegramBot.sendMessage(chat_id, text_message);
+            if(msg.chat.id!==CHAT_GROUP_ID) {
+                if(!msg.text || msg.text.length<10) {
+                    text_message = "Il comando /insult è costituito da: /insult + messaggio, digita correttamente il comando e scrivi il tuo insulto!";           
+                }
+                else {
+                    text_message = "Insulto #" + msg.message_id + "\n" + msg.text;
+                    telegramBot.sendMessage(chat_id, "L'insulto è stato correttamente inviato nel gruppo!"); 
+                    chat_id = CHAT_GROUP_ID;
+                }
+            }
+            else {
+                text_message = "il comando /insult non può essere usato nella chat di gruppo, scrivimi in privato!";
+            }
+            telegramBot.sendMessage(chat_id, text_message);
+        }    
+    });        
 });
 
 commands.on('/claim', function (msg, telegramBot) {
     var text_message;
-    var message_id;
+    var message_id;    
     if (msg.text.indexOf("#") === 0){
         msg.text = msg.text.substring(1);
     }
     message_id = Number(msg.text);
     if (msg.chat.id !==  CHAT_GROUP_ID) {
         if (!isNaN(message_id)) {
-            text_message = "Per scoprire chi ha scritto il messaggio devi eseguire il comando \n /sendClaim seguito dall'ID e dal numero di cellulare su cui ti invieremo solo alcune lettere del nome della persona che ha scritto il messaggio #"+ message_id + "\n" +
-                "ATTENZIONE: non vi sarà alcuna corrispondenza con la lunghezza del nome della persona\n" +
+            text_message = "Per scoprire chi ha scritto il messaggio devi eseguire il comando \n /sendClaim seguito dall'ID e dal numero di cellulare su cui ti invieremo solo alcune lettere del nome della persona che ha scritto il messaggio #"+ message_id + "\n\n" +
+                "ATTENZIONE: non vi sarà alcuna corrispondenza con la lunghezza del nome della persona!\n\nome" +
                 "Il messaggio è gratuito, nessun costo vi verrà addebitato.\n" +
                 "Esempio: \n" +
                 "/sendClaim #" + message_id + " 3351234567";
@@ -142,25 +151,52 @@ commands.on('/claim', function (msg, telegramBot) {
     } */
 });
 
-commands.on('/sendclaim', function (msg, telegramBot) {
+commands.on('/sendClaim', function (msg, telegramBot) {
     var array = msg.text.split(" ");    
     var id;
     var text_message;
-    if (array[0][0]!=="#") {
-        telegramBot.sendMessage(msg.chat.id, "Errore! L'ID deve iniziare per #");
-    }
-    else if(msg.chat.id !== CHAT_GROUP_ID) {
-        id = Number(array[0].substring(1));
-        db.collection('insulted').find({ID: id}).limit(1).next().then(function (insult) {
-            if (insult == null) {
-                text_message = "Errore! ID non valido, riprova!";
+    db.collection('users').find({telegramId: msg.chat.id}).limit(1).next().then(function(user){
+        /* controllo se lo user ha accettato i termini o non ha proprio fatto start */
+        if(user===null) {
+            return telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
+        }
+        if(!user.hasAccepted) {
+            return telegramBot.sendMessage(msg.chat.id, "Non hai ancora accettato i termini, digita il comando /accept");
+        }
+        /* primo controllo: user ha almeno 1 vita? */
+        if(user.lives===0) {
+        telegramBot.sendMessage(msg.chat.id, "Hai esaurito le vite! Per poter acquistare altre vite, invita un amico sul gruppo Insulted/Spotted Roma Tre!");
+        }
+        else {
+            /* controlli sul comando*/
+            if (array[0][0]!=="#") {
+                telegramBot.sendMessage(msg.chat.id, "Errore! L'ID deve iniziare per #");
             }
-            else {
-                text_message = "L'insulto: #" + id + " E'stato scritto da: \n" + hideWord(insult.Nome) + " " + hideWord(insult.Cognome);
+            else if(msg.chat.id !== CHAT_GROUP_ID) {
+                id = Number(array[0].substring(1));
+                db.collection('insulted').find({ID: id}).limit(1).next().then(function (insult) {
+                    if (insult == null) {
+                        text_message = "Errore! ID non valido, riprova!";
+                    }
+                    else {
+                        var residual_life = user.lives-1; 
+                        db.collection('users').updateOne({telegramId: user.telegramId}, {$set: {lives: (residual_life)}});
+                        if (residual_life===1) {
+                            var intro_message = "Hai ancora: 1 vita\n\n";
+                        }
+                        else if (residual_life===0) {
+                            var intro_message = "Hai esaurito l'ultima vita! Aggiungi un amico al gruppo:\nInsulted/Spotted Roma Tre, riceverai una vita!\n\n";
+                        }
+                        else {
+                            var intro_message = "Hai ancora: " + residual_life + " vite\n\n";
+                        }    
+                        text_message = intro_message + "L'insulto: #" + id + " e'stato scritto da: \n" + hideWord(insult.Nome) + " " + hideWord(insult.Cognome);
+                    }
+                    telegramBot.sendMessage(msg.chat.id, text_message);
+                });
             }
-            telegramBot.sendMessage(msg.chat.id, text_message);
-        });
-    }
+        } 
+    });   
 });
 
 /* funzione che maschera il nome e cognome, varia la lunghezza di entrambi */
