@@ -46,7 +46,12 @@ function start_action(msg, telegramBot) {
 
 commands.on('/start', function (msg, telegramBot) {
     var user = new User(msg.chat.id, telegramBot, msg.from.first_name, msg.from.last_name, msg.from.username);
-    user.addToDb();
+    var promise = user.getUser();
+    if(promise != user) {
+        //console.log(promise);
+        console.log(user);
+        user.addToDb();
+    }    
     start_action(msg,telegramBot);
 });
 
@@ -112,12 +117,10 @@ commands.on('/insult', function (msg, telegramBot) {
 commands.on('/claim', function (msg, telegramBot) {
     var text_message;
     var message_id;
-
     if (msg.text.indexOf("#") === 0){
         msg.text = msg.text.substring(1);
     }
     message_id = Number(msg.text);
-
     if (msg.chat.id !==  CHAT_GROUP_ID) {
         if (!isNaN(message_id)) {
             text_message = "Per scoprire chi ha scritto il messaggio devi eseguire il comando \n /sendClaim seguito dall'ID e dal numero di cellulare su cui ti invieremo solo alcune lettere del nome della persona che ha scritto il messaggio #"+ message_id + "\n" +
@@ -164,6 +167,7 @@ commands.on('/sendclaim', function (msg, telegramBot) {
     }
 });
 
+/* funzione che maschera il nome e cognome, varia la lunghezza di entrambi */
 function hideWord(word) {
     var i;
     var result = word[0];
@@ -266,6 +270,6 @@ commands.on('/default', function (msg, telegramBot) {
                 break;
         }
         message += '\n\nDigita /help per la lista dei comandi disponibili!';
-        //telegramBot.sendMessage(msg.chat.id, message);
+        telegramBot.sendMessage(msg.chat.id, message);
     }
 });
