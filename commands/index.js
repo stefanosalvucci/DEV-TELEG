@@ -23,15 +23,15 @@ var listaComandi = '/insult - Insulta i tuoi amici!' +
     '\n/exit - Elimina le tue informazioni personali' +
     '\n/help - Mostra la lista dei comandi disponibili';
 
-
-// NOT WORKING, UNDERSTAND PROMISES BEFORE
+/* Controlla se l'utente ha accettato le condizioni */
 function hasAccepted(userId){
     var user = new User(userId);
     user.getUser().then(function(user){
-        return Promise.resolve(user.hasAccepted);
+        return user.hasAccepted;
     });
 };
 
+/* Se l'utente ha accettato le condizioni, setta il parametro 'hasAccepted' a true */
 function setAccepted(userId){
     var user = new User(userId);
     user.getUser().then(function(){
@@ -56,20 +56,12 @@ commands.on('/start', function (msg, telegramBot) {
 });
 
 commands.on('/accept', function (msg, telegramBot) {
-
-  // UNDERSTAND IF HAS_ACCEPTED
-  // console.log('w il cioccolato');
-  // hasAccepted(msg.chat.id).then(function(hasAccepted){
-  //   console.log(hasAccepted)
-  // });
-
   if (hasAccepted(msg.chat.id)) {
     telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
   }
   else {
     telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
     setAccepted(msg.chat.id);
-
   }
 });
 
