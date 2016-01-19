@@ -1,4 +1,4 @@
-const CHAT_GROUP_ID = -69948627;
+        const CHAT_GROUP_ID = -69948627;
 
 'use strict';
 
@@ -26,10 +26,10 @@ var listaComandi = '/insult - Insulta i tuoi amici!' +
 /* Controlla se l'utente ha accettato le condizioni */
 function hasAccepted(userId){
     var user = new User(userId);
-    user.getUser().then(function(user){
+    user.collection.find({telegramId: user.telegramId}).limit(1).next().then(function(user){
         return user.hasAccepted;
     });
-};
+};  
 
 /* Se l'utente ha accettato le condizioni, setta il parametro 'hasAccepted' a true */
 function setAccepted(userId){
@@ -46,18 +46,27 @@ function start_action(msg, telegramBot) {
 
 commands.on('/start', function (msg, telegramBot) {
     var user = new User(msg.chat.id, telegramBot, msg.from.first_name, msg.from.last_name, msg.from.username);
-    user.addToDb();
     start_action(msg,telegramBot);
+    user.collection.find({telegramId: user.telegramId}).limit(1).next().then(function (User) {
+        (User===null) && user.addToDb();
+    });
 });
 
 commands.on('/accept', function (msg, telegramBot) {
-  if (hasAccepted(msg.chat.id)) {
-    telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
-  }
-  else {
-    telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
-    setAccepted(msg.chat.id);
-  }
+    db.collection('users').find({telegramId: msg.chat.id}).limit(1).next().then(function(user){
+        if(user===null) {
+            telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
+        }
+        else {    
+            if(user.hasAccepted) {
+                telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
+            }    
+            else {
+                telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
+                setAccepted(msg.chat.id);
+            }
+        }    
+    });
 });
 
 commands.on('/help', function (msg, telegramBot) {
@@ -104,12 +113,10 @@ commands.on('/insult', function (msg, telegramBot) {
 commands.on('/claim', function (msg, telegramBot) {
     var text_message;
     var message_id;
-
     if (msg.text.indexOf("#") === 0){
         msg.text = msg.text.substring(1);
     }
     message_id = Number(msg.text);
-
     if (msg.chat.id !==  CHAT_GROUP_ID) {
         if (!isNaN(message_id)) {
             text_message = "Per scoprire chi ha scritto il messaggio devi eseguire il comando \n /sendClaim seguito dall'ID e dal numero di cellulare su cui ti invieremo solo alcune lettere del nome della persona che ha scritto il messaggio #"+ message_id + "\n" +
@@ -156,6 +163,7 @@ commands.on('/sendclaim', function (msg, telegramBot) {
     }
 });
 
+/* funzione che maschera il nome e cognome, varia la lunghezza di entrambi */
 function hideWord(word) {
     var i;
     var result = word[0];
@@ -258,6 +266,6 @@ commands.on('/default', function (msg, telegramBot) {
                 break;
         }
         message += '\n\nDigita /help per la lista dei comandi disponibili!';
-        //telegramBot.sendMessage(msg.chat.id, message);
+        telegramBot.sendMessage(msg.chat.id, message);
     }
 });

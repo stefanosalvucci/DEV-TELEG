@@ -9,7 +9,7 @@ var ConversationLogger = function () {
     this.privateConversationCollection = db.collection('privateConversations');
     this.sniffCollection = db.collection('sniff'); //non servirà più
     this.groupCollection = db.collection('groupConversations');
-    this.insultedCollection = db.collection('insulted');   
+    this.insultedCollection = db.collection('insulted');  
 };
 
 /**
