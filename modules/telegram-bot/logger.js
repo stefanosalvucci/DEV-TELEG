@@ -1,4 +1,6 @@
 const CHAT_GROUP_ID = -69948627;
+//const CHAT_GROUP_ID = -108401361;
+
 
 'use strict';
 
@@ -10,6 +12,7 @@ var ConversationLogger = function () {
     this.sniffCollection = db.collection('sniff'); //non servirà più
     this.groupCollection = db.collection('groupConversations');
     this.insultedCollection = db.collection('insulted');  
+    this.usersCollection = db.collection('users');
 };
 
 /**
@@ -37,13 +40,29 @@ ConversationLogger.prototype.sniff = function (msg) {
 };  */
 
 /* Salvo sulla collection del gruppo Insulted/Spotted Roma Tre */
-ConversationLogger.prototype.sniffInfoGruppo = function (msg){ 
+ConversationLogger.prototype.sniffInfoGruppo = function (msg){
+  var that = this;
   (msg.chat.id===CHAT_GROUP_ID) && this.groupCollection.insertOne({
-      Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
-      Data: new Date(msg.date*1000).toLocaleString(),
-      Messaggio: msg.text,
-      Message_ID: msg.message_id
-    });  
+    Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
+    Data: new Date(msg.date*1000).toLocaleString(),
+    Messaggio: msg.text,
+    Message_ID: msg.message_id
+  });
+  if(msg.new_chat_participant != null){
+    // Aggiunge al DB l'utente aggiunto al gruppo
+    this.usersCollection.find({telegramId: msg.new_chat_participant.id}).limit(1).next().then(function(user){
+      if(user == null) {
+        that.usersCollection.insertOne({
+          telegramId: msg.new_chat_participant.id,
+          firstName: msg.new_chat_participant.first_name,
+          lastName: msg.new_chat_participant.last_name,
+          username: msg.new_chat_participant.username,
+          lives: 3,
+          hasAccepted: false
+        });
+      }
+    })
+  }
 };
 
 /* Salvo sulla collection privata */

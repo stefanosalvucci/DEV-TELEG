@@ -1,5 +1,5 @@
-        //const CHAT_GROUP_ID = -69948627;
-        const CHAT_GROUP_ID = -108401361;
+const CHAT_GROUP_ID = -69948627;
+//const CHAT_GROUP_ID = -108401361;
 
 'use strict';
 
@@ -280,7 +280,7 @@ commands.on('/grazie', function (msg, telegramBot) {
 //commands.on('/debug', function (msg, telegramBot) {
 //});
 
-commands.on('/default', function (msg, telegramBot) {
+commands.on("/default", function (msg, telegramBot) {
     /* sul gruppo Insulted/Spotted Roma Tre il Bot non deve parlare troppo! */
     if (msg.chat.id !==  CHAT_GROUP_ID) {
         var message = '';

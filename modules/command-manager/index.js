@@ -17,7 +17,7 @@ var CommandManager = function () {
  * @param cb The callback triggered by the message
  */
 CommandManager.prototype.on = function (message, cb) {
-    this.commands[message] = cb;
+      this.commands[message] = cb;
 };
 
 /**
