@@ -33,10 +33,13 @@ function hasAccepted(userId){
 
 /* Se l'utente ha accettato le condizioni, setta il parametro 'hasAccepted' a true */
 function setAccepted(userId){
+    /* per problema di sincronizzazione (query asincrona di mongo) leviamo gli utenti che hanno fatto doppio start dal db */
+    db.collection('users').remove({telegramId: userId});
     var user = new User(userId);
+    user.addToDb();        
     user.getUser().then(function(){
         user.update({hasAccepted: true});
-    });
+    }); 
 };
 
 /* comandi start e accetta: start non può essere ripetuto, NOTA: metti in ogni metodo il controllo su isAccepted */
@@ -47,9 +50,8 @@ function start_action(msg, telegramBot) {
 commands.on('/start', function (msg, telegramBot) {
     var user = new User(msg.from.id, telegramBot, msg.from.first_name, msg.from.last_name, msg.from.username);
     start_action(msg,telegramBot);
-    console.log(telegramBot);
     user.collection.find({telegramId: user.telegramId}).limit(1).next().then(function (User) {
-        (User===null) && user.addToDb();
+        (User==null) && user.addToDb();
     });
 });
 
@@ -59,11 +61,12 @@ commands.on('/accept', function (msg, telegramBot) {
             telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
         }
         else {
+
             if(user.hasAccepted) {
                 telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
             }
             else {
-                telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
+                telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);            
                 setAccepted(msg.from.id);
             }
         }
