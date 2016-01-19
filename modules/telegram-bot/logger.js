@@ -4,14 +4,14 @@ const CHAT_GROUP_ID = -69948627;
 'use strict';
 
 var db = require('../database').db;
-var telegramBot = require('../../node_modules/node-telegram-bot-api');
+
 
 var ConversationLogger = function () {
     this.conversationCollection = db.collection('conversations');
     this.privateConversationCollection = db.collection('privateConversations');
-    this.sniffCollection = db.collection('sniff'); //non servirà più
     this.groupCollection = db.collection('groupConversations');
     this.insultedCollection = db.collection('insulted');  
+    this.spottedCollection = db.collection('spotted');  
     this.usersCollection = db.collection('users');
 };
 
@@ -41,6 +41,7 @@ ConversationLogger.prototype.sniff = function (msg) {
 
 /* Salvo sulla collection del gruppo Insulted/Spotted Roma Tre */
 ConversationLogger.prototype.sniffInfoGruppo = function (msg){
+  var telegramBot = require('./index');
   var that = this;
   if(msg.chat.id===CHAT_GROUP_ID) {
     this.groupCollection.insertOne({
@@ -71,12 +72,11 @@ ConversationLogger.prototype.sniffInfoGruppo = function (msg){
 };
 
 /* Aggiunge una vita allo User */
-var addLives = function (msg,telegramBot) {
+function addLives(msg,telegramBot) {
   console.log("entra");
-  console.log(this.telegramBot);
-  db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user){
+  db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user) {
       db.collection('users').updateOne({telegramId: user.telegramId}, {$set: {lives: user.lives+1}});
-      this.telegramBot.sendMessage(msg.chat.id, "Grazie per aver aggiunto un'amico! Hai ottenuto una vita!");
+      telegramBot.sendMessage(msg.chat.id, "Grazie per aver aggiunto un'amico! Hai ottenuto una vita!");
     });
 } 
 
@@ -97,6 +97,18 @@ ConversationLogger.prototype.sniffInsulted = function (msg){
       Cognome: msg.from.last_name,
       Username: msg.from.username,
       Messaggio: msg.text.substring(8),
+      Data: new Date(msg.date*1000).toLocaleString()
+    }); 
+};
+
+/* Salvo sulla collection spotted gli spot */
+ConversationLogger.prototype.sniffSpotted = function (msg){
+  (msg.chat.id!==CHAT_GROUP_ID) && (msg.text.substring(0,6)==="/spot ") && (msg.text.length>17) && this.spottedCollection.insertOne({
+      ID: msg.message_id,
+      Nome: msg.from.first_name,
+      Cognome: msg.from.last_name,
+      Username: msg.from.username,
+      Messaggio: msg.text.substring(6),
       Data: new Date(msg.date*1000).toLocaleString()
     }); 
 };

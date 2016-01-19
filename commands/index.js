@@ -76,7 +76,7 @@ commands.on('/help', function (msg, telegramBot) {
             telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
         }
         if (user.hasAccepted) {
-            telegramBot.sendMessage(msg.chat.id, "Regole del gioco: \nullI comandi: /insult, /spott e /claim devono essere inviati in privato al Bot.\nHai a disposizione 3 vite iniziali, il comando /claim costa una vita. Per guadagnare altre vite basta invitare un amico sul gruppo: Insulted/Spotted Roma tre.\nBuon divertimento! \n\n " +
+            telegramBot.sendMessage(msg.chat.id, "Regole del gioco: \nI comandi: /insult, /spott e /claim devono essere inviati in privato al Bot.\nHai a disposizione 3 vite iniziali, il comando /claim costa una vita. Per guadagnare altre vite basta invitare un amico sul gruppo: Insulted/Spotted Roma tre.\nBuon divertimento! \n\n " +
             "Ecco la lista delle cose che puoi chiedermi:\n" + listaComandi);
         }
         else {
@@ -192,28 +192,53 @@ commands.on('/sendClaim', function (msg, telegramBot) {
             }
             else if(msg.chat.id !== CHAT_GROUP_ID) {
                 id = Number(array[0].substring(1));
+                var isInsult = false;
                 db.collection('insulted').find({ID: id}).limit(1).next().then(function (insult) {
                     if (insult == null) {
                         text_message = "Errore! ID non valido, riprova!";
                     }
                     else {
+                        isInsult = true;
                         var residual_life = user.lives-1;
+                        var intro_message;
                         db.collection('users').updateOne({telegramId: user.telegramId}, {$set: {lives: (residual_life)}});
                         if (residual_life===1) {
-                            var intro_message = "Hai ancora: 1 vita\n\n";
+                            intro_message = "Hai ancora: 1 vita\n\n";
                         }
                         else if (residual_life===0) {
-                            var intro_message = "Hai esaurito l'ultima vita! Aggiungi un amico al gruppo:\nInsulted/Spotted Roma Tre, riceverai una vita!\n\n";
+                            intro_message = "Hai esaurito l'ultima vita! Aggiungi un amico al gruppo:\nInsulted/Spotted Roma Tre, riceverai una vita!\n\n";
                         }
                         else {
-                            var intro_message = "Hai ancora: " + residual_life + " vite\n\n";
+                            intro_message = "Hai ancora: " + residual_life + " vite\n\n";
                         }
                         text_message = intro_message + "L'insulto: #" + id + " e'stato scritto da: \n" + hideWord(insult.Nome) + " " + hideWord(insult.Cognome);
+                    }                   
+                });
+                db.collection('spotted').find({ID: id}).limit(1).next().then(function (spot) {
+                    if (spot == null) {
+                        if(!isInsult) {
+                            text_message = "Errore! ID non valido, riprova!";
+                        }
                     }
-                    telegramBot.sendMessage(msg.chat.id, text_message);
+                    else {
+                        var residual_life = user.lives-1;
+                        var intro_message;
+                        db.collection('users').updateOne({telegramId: user.telegramId}, {$set: {lives: (residual_life)}});
+                        if (residual_life===1) {
+                            intro_message = "Hai ancora: 1 vita\n\n";
+                        }
+                        else if (residual_life===0) {
+                            intro_message = "Hai esaurito l'ultima vita! Aggiungi un amico al gruppo:\nInsulted/Spotted Roma Tre, riceverai una vita!\n\n";
+                        }
+                        else {
+                            intro_message = "Hai ancora: " + residual_life + " vite\n\n";
+                        }
+                        text_message = intro_message + "Lo spot: #" + id + " e'stato scritto da: \n" + hideWord(spot.Nome) + " " + hideWord(spot.Cognome);                       
+                    }
+                    telegramBot.sendMessage(msg.chat.id, text_message);                        
                 });
             }
-        }
+        }    
     });
 });
 
@@ -263,6 +288,7 @@ commands.on('/vote', function (msg, telegramBot) {
         telegramBot.sendMessage(chat_id, text_message);
     });
 });
+
 function randomSticker(rand_sticker_number){
     var stickers = [
         'BQADAgADGwADWl7kAfSRczM4ailXAg', // Di Battista
@@ -292,6 +318,7 @@ function randomSticker(rand_sticker_number){
     ];
     return stickers[rand_sticker_number];
 }
+
 function stickerMessage(rand_sticker_number){
     var text_message = 'Salve alunno, il tuo voto ';
     var sticker_message = [
