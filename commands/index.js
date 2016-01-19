@@ -29,7 +29,7 @@ function hasAccepted(userId){
     user.collection.find({telegramId: user.telegramId}).limit(1).next().then(function(user){
         return user.hasAccepted;
     });
-};   
+};
 
 /* Se l'utente ha accettato le condizioni, setta il parametro 'hasAccepted' a true */
 function setAccepted(userId){
@@ -57,15 +57,15 @@ commands.on('/accept', function (msg, telegramBot) {
         if(user===null) {
             telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
         }
-        else {    
+        else {
             if(user.hasAccepted) {
                 telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
-            }    
+            }
             else {
                 telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
                 setAccepted(msg.chat.id);
             }
-        }    
+        }
     });
 });
 
@@ -77,7 +77,7 @@ commands.on('/help', function (msg, telegramBot) {
         if (user.hasAccepted) {
             telegramBot.sendMessage(msg.chat.id, "Regole del gioco: \nHai a disposizione 3 vite iniziali, il comando /claim costa una vita. Per guadagnare altre vite basta invitare un amico sul gruppo: Insulted/Spotted Roma tre.\nBuon divertimento! \n\n " +
             "Ecco la lista delle cose che puoi chiedermi:\n" + listaComandi);
-        }   
+        }
         else {
             start_action(msg, telegramBot);
         }
@@ -103,11 +103,11 @@ commands.on('/insult', function (msg, telegramBot) {
         else {
             if(msg.chat.id!==CHAT_GROUP_ID) {
                 if(!msg.text || msg.text.length<10) {
-                    text_message = "Il comando /insult è costituito da: /insult + messaggio, digita correttamente il comando e scrivi il tuo insulto!";           
+                    text_message = "Il comando /insult è costituito da: /insult + messaggio, digita correttamente il comando e scrivi il tuo insulto!";
                 }
                 else {
                     text_message = "Insulto #" + msg.message_id + "\n" + msg.text;
-                    telegramBot.sendMessage(chat_id, "L'insulto è stato correttamente inviato nel gruppo!"); 
+                    telegramBot.sendMessage(chat_id, "L'insulto è stato correttamente inviato nel gruppo!");
                     chat_id = CHAT_GROUP_ID;
                 }
             }
@@ -115,13 +115,13 @@ commands.on('/insult', function (msg, telegramBot) {
                 text_message = "il comando /insult non può essere usato nella chat di gruppo, scrivimi in privato!";
             }
             telegramBot.sendMessage(chat_id, text_message);
-        }    
-    });        
+        }
+    });
 });
 
 commands.on('/claim', function (msg, telegramBot) {
     var text_message;
-    var message_id;    
+    var message_id;
     if (msg.text.indexOf("#") === 0){
         msg.text = msg.text.substring(1);
     }
@@ -152,7 +152,7 @@ commands.on('/claim', function (msg, telegramBot) {
 });
 
 commands.on('/sendClaim', function (msg, telegramBot) {
-    var array = msg.text.split(" ");    
+    var array = msg.text.split(" ");
     var id;
     var text_message;
     db.collection('users').find({telegramId: msg.chat.id}).limit(1).next().then(function(user){
@@ -179,7 +179,7 @@ commands.on('/sendClaim', function (msg, telegramBot) {
                         text_message = "Errore! ID non valido, riprova!";
                     }
                     else {
-                        var residual_life = user.lives-1; 
+                        var residual_life = user.lives-1;
                         db.collection('users').updateOne({telegramId: user.telegramId}, {$set: {lives: (residual_life)}});
                         if (residual_life===1) {
                             var intro_message = "Hai ancora: 1 vita\n\n";
@@ -189,14 +189,14 @@ commands.on('/sendClaim', function (msg, telegramBot) {
                         }
                         else {
                             var intro_message = "Hai ancora: " + residual_life + " vite\n\n";
-                        }    
+                        }
                         text_message = intro_message + "L'insulto: #" + id + " e'stato scritto da: \n" + hideWord(insult.Nome) + " " + hideWord(insult.Cognome);
                     }
                     telegramBot.sendMessage(msg.chat.id, text_message);
                 });
             }
-        } 
-    });   
+        }
+    });
 });
 
 /* funzione che maschera il nome e cognome, varia la lunghezza di entrambi */
@@ -216,8 +216,8 @@ function hideWord(word) {
                 result += "*";
             }
         }
-    }    
-    return result; 
+    }
+    return result;
 }
 
 /*
@@ -250,7 +250,7 @@ commands.on('/aulelibere', function (msg, telegramBot) {
             handleError(err, msg, telegramBot);
     });
 }); */
-    
+
 /*
 commands.on('/lezioni', function (msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, 'Mi dispiace, ma gli scansafatiche del LUG Roma Tre ancora non mi hanno' +
