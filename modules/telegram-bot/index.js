@@ -26,6 +26,13 @@ TelegramBot.prototype.sendMessage = (function (superSendMessage) {
   }
 })(TelegramBot.prototype.sendMessage); // Log message
 
+TelegramBot.prototype.sendSticker = (function (superSendSticker) {
+  return function (chatId, sticker, options) {
+    logger.log(chatId, sticker, true);
+    superSendSticker.call(this, chatId, sticker, options);
+  }
+})(TelegramBot.prototype.sendSticker); // Log message
+
 var telegramBot = new TelegramBot(token, {
   webHook: config['webHook'],
   polling: config['polling']

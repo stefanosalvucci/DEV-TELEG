@@ -1,5 +1,4 @@
-const CHAT_GROUP_ID = -69948627;
-//const CHAT_GROUP_ID = -108401361;
+        const CHAT_GROUP_ID = -69948627;
 
 'use strict';
 
@@ -130,7 +129,7 @@ commands.on('/claim', function (msg, telegramBot) {
     if (msg.chat.id !==  CHAT_GROUP_ID) {
         if (!isNaN(message_id)) {
             text_message = "Per scoprire chi ha scritto il messaggio devi eseguire il comando \n /sendClaim seguito dall'ID e dal numero di cellulare su cui ti invieremo solo alcune lettere del nome della persona che ha scritto il messaggio #"+ message_id + "\n\n" +
-                "ATTENZIONE: non vi sarà alcuna corrispondenza con la lunghezza del nome della persona!\n\n" +
+                "ATTENZIONE: non vi sarà alcuna corrispondenza con la lunghezza del nome della persona!\n\nome" +
                 "Il messaggio è gratuito, nessun costo vi verrà addebitato.\n" +
                 "Esempio: \n" +
                 "/sendClaim #" + message_id + " 3351234567";
@@ -280,7 +279,7 @@ commands.on('/grazie', function (msg, telegramBot) {
 //commands.on('/debug', function (msg, telegramBot) {
 //});
 
-commands.on("/default", function (msg, telegramBot) {
+commands.on('/default', function (msg, telegramBot) {
     /* sul gruppo Insulted/Spotted Roma Tre il Bot non deve parlare troppo! */
     if (msg.chat.id !==  CHAT_GROUP_ID) {
         var message = '';
