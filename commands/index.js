@@ -45,7 +45,7 @@ function start_action(msg, telegramBot) {
 };
 
 commands.on('/start', function (msg, telegramBot) {
-    var user = new User(msg.chat.id, telegramBot, msg.from.first_name, msg.from.last_name, msg.from.username);
+    var user = new User(msg.from.id, telegramBot, msg.from.first_name, msg.from.last_name, msg.from.username);
     start_action(msg,telegramBot);
     user.collection.find({telegramId: user.telegramId}).limit(1).next().then(function (User) {
         (User===null) && user.addToDb();
@@ -53,7 +53,7 @@ commands.on('/start', function (msg, telegramBot) {
 });
 
 commands.on('/accept', function (msg, telegramBot) {
-    db.collection('users').find({telegramId: msg.chat.id}).limit(1).next().then(function(user){
+    db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user){
         if(user===null) {
             telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
         }
@@ -63,14 +63,14 @@ commands.on('/accept', function (msg, telegramBot) {
             }
             else {
                 telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
-                setAccepted(msg.chat.id);
+                setAccepted(msg.from.id);
             }
         }
     });
 });
 
 commands.on('/help', function (msg, telegramBot) {
-    db.collection('users').find({telegramId: msg.chat.id}).limit(1).next().then(function(user){
+    db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user){
         if(user===null) {
             telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
         }
@@ -92,7 +92,7 @@ commands.on('/spot', function (msg, telegramBot) {
 commands.on('/insult', function (msg, telegramBot) {
     var text_message;
     var chat_id = msg.chat.id;
-    db.collection('users').find({telegramId: msg.chat.id}).limit(1).next().then(function(user) {
+    db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user) {
         /* controllo se l'user ha accettato i termini o non ha fatto start */
         if(user===null) {
             return telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
@@ -155,7 +155,7 @@ commands.on('/sendClaim', function (msg, telegramBot) {
     var array = msg.text.split(" ");
     var id;
     var text_message;
-    db.collection('users').find({telegramId: msg.chat.id}).limit(1).next().then(function(user){
+    db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user){
         /* controllo se lo user ha accettato i termini o non ha proprio fatto start */
         if(user===null) {
             return telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
