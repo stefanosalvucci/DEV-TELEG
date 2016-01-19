@@ -19,6 +19,7 @@ var handleError = function (err, msg, telegramBot) {
 var listaComandi = '/insult - Insulta i tuoi amici!' +
     '\n/spot - Apprezza qualcuno, potresti essere ricambiato!' +
     '\n/claim - Ottieni un indizio, e scopri chi ti ha pensato!' +
+    '\n/vote - Ottieni un voto dal tuo professore preferito!' +
     '\n/exit - Elimina le tue informazioni personali' +
     '\n/help - Mostra la lista dei comandi disponibili';
 
@@ -86,7 +87,33 @@ commands.on('/help', function (msg, telegramBot) {
 
 
 commands.on('/spot', function (msg, telegramBot) {
-    telegramBot.sendMessage(msg.chat.id, text_message);
+    var text_message;
+    var chat_id = msg.chat.id;
+    db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user) {
+        /* controllo se l'user ha accettato i termini o non ha fatto start */
+        if(user===null) {
+            text_message = 'Errore! Non hai avviato il Bot, premi /start';
+        }
+        else if(!user.hasAccepted) {
+            text_message = "Non hai ancora accettato i termini, digita il comando /accept";
+        }
+        else {
+            if(msg.chat.id!==CHAT_GROUP_ID) {
+                if(!msg.text || msg.text.length<10) {
+                    text_message = "Il comando /spot è costituito da: /spot + messaggio, digita correttamente il comando e scrivi il tuo spot!";
+                }
+                else {
+                    text_message = "Spot #" + msg.message_id + "\n" + msg.text;
+                    telegramBot.sendMessage(chat_id, "Lo spot è stato correttamente inviato nel gruppo!");
+                    chat_id = CHAT_GROUP_ID;
+                }
+            }
+            else {
+                text_message = "il comando /spot non può essere usato nella chat di gruppo, scrivimi in privato!";
+            }
+        }
+        telegramBot.sendMessage(chat_id, text_message);
+    });
 });
 
 commands.on('/insult', function (msg, telegramBot) {
@@ -95,10 +122,10 @@ commands.on('/insult', function (msg, telegramBot) {
     db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user) {
         /* controllo se l'user ha accettato i termini o non ha fatto start */
         if(user===null) {
-            return telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
+            text_message = 'Errore! Non hai avviato il Bot, premi /start';
         }
         if(!user.hasAccepted) {
-                return telegramBot.sendMessage(msg.chat.id, "Non hai ancora accettato i termini, digita il comando /accept");
+                text_message = "Non hai ancora accettato i termini, digita il comando /accept";
         }
         else {
             if(msg.chat.id!==CHAT_GROUP_ID) {
@@ -114,8 +141,8 @@ commands.on('/insult', function (msg, telegramBot) {
             else {
                 text_message = "il comando /insult non può essere usato nella chat di gruppo, scrivimi in privato!";
             }
-            telegramBot.sendMessage(chat_id, text_message);
         }
+        telegramBot.sendMessage(chat_id, text_message);
     });
 });
 
@@ -209,6 +236,92 @@ function hideWord(word) {
         }
     }
     return result;
+}
+
+commands.on('/vote', function (msg, telegramBot) {
+    var text_message;
+    var chat_id = msg.chat.id;
+    var rand_sticker_number;
+    db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user) {
+        /* controllo se l'user ha accettato i termini o non ha fatto start */
+        if(user===null) {
+            text_message = 'Errore! Non hai avviato il Bot, premi /start';
+        }
+        else if(!user.hasAccepted) {
+            text_message = "Non hai ancora accettato i termini, digita il comando /accept";
+        }
+        else {
+            if(chat_id!==CHAT_GROUP_ID) {
+                rand_sticker_number = Math.floor(Math.random() * 23);
+                telegramBot.sendSticker(chat_id, randomSticker(rand_sticker_number));
+                text_message = stickerMessage(rand_sticker_number) + (10+Math.floor(Math.random() * 20));
+            }
+            else {
+                text_message = "il comando /vote non può essere usato nella chat di gruppo, scrivimi in privato!";
+            }
+        }
+        telegramBot.sendMessage(chat_id, text_message);
+    });
+});
+function randomSticker(rand_sticker_number){
+    var stickers = [
+        'BQADAgADGwADWl7kAfSRczM4ailXAg', // Di Battista
+        'BQADAgADGQADWl7kAfEwJfps4tvUAg', // Gasparetti
+        'BQADAgADFwADWl7kAceS-g-3icIcAg', // Limongelli
+        'BQADAgADSAADWl7kAYQ-wmJwalFnAg', // Pizzonia
+        'BQADAgADJAADWl7kATaSxF8zzcsnAg', // Torlone con parrucca
+        'BQADAgADJgADWl7kAX2gld2Z2637Ag', // Limongelli in bianco e nero
+        'BQADAgADJwADWl7kAaVIaAX1KN-pAg', // Miola
+        'BQADAgADHwADWl7kAffEpBCbtTNEAg', // Cabibbo
+        'BQADAgADKQADWl7kAbTMgwWQUeTbAg', // Benedetto santo
+        'BQADAgADHQADWl7kATgkEn9Qj32tAg', // Crescenti
+        'BQADAgADIgADWl7kAcnC9sw-fFnoAg', // Torlone tagliato verticalmente
+        'BQADAgADKwADWl7kATp7PhtkkeECAg', // Ulivi in barca
+        'BQADAgADLQADWl7kAQ-7RxFf_z-4Ag', // Pizzonia style
+        'BQADAgADLwADWl7kAdYfvoS23ObqAg', // Pacciarelli
+        'BQADAgADMQADWl7kAeJHtVFVTr5MAg', // Atzeni
+        'BQADAgADNQADWl7kAV8j2ZPxTHVhAg', // Benedetto che corre
+        'BQADAgADOAADWl7kAcavuotsECgdAg', // Torlone pensieroso
+        'BQADAgADOgADWl7kAdriFtc0tjSaAg', // De Virgilio
+        'BQADAgADPAADWl7kAeNV6KsFZ_TCAg', // Torlone al pc
+        'BQADAgADPgADWl7kAZHLW7YbjDZuAg', // Sotgiu
+        'BQADAgADQAADWl7kAT-08gSGJAqDAg', // Titto Thug Life
+        'BQADAgADQgADWl7kASX6YgafWuWHAg', // Miola beve
+        'BQADAgADRgADWl7kAVfDQVGQYfdFAg', // Natalini
+        'BQADAgADSAADWl7kAYQ-wmJwalFnAg'  // Pizzonia
+    ];
+    return stickers[rand_sticker_number];
+}
+function stickerMessage(rand_sticker_number){
+    var text_message = 'Salve alunno, il tuo voto ';
+    var sticker_message = [
+        'a Reti di Calcolatori', // Di Battista
+        'a Fondamenti di Informatica', // Gasparetti
+        'a Fondamenti di Informatica', // Limongelli
+        'a Sicurezza informatica e delle Reti', // Pizzonia
+        'a Big Data', // Torlone con parrucca
+        'a Fondamenti di Informatica', // Limongelli in bianco e nero
+        'a Fondamenti di Informatica', // Miola
+        'ad Architetture Software', // Cabibbo
+        'a Telecomunicazioni Wireless', // Benedetto santo
+        'a Programmazione Concorrente', // Crescenti
+        'a Big Data', // Torlone tagliato verticalmente
+        'a Fondamenti di Automatica', // Ulivi in barca
+        'a Sistemi Operativi', // Pizzonia style
+        'a Ricerca Operativa', // Pacciarelli
+        'a Basi di Dati 2', // Atzeni
+        'a Fondamenti di Telecomunicazioni', // Benedetto che corre
+        'a Calcolatori Elettronici', // Torlone pensieroso
+        'ad Algoritmi e Strutture di Dati sarà', // De Virgilio
+        'a Basi di Dati', // Torlone al pc
+        'a Chimica', // Sotgiu
+        'a Informatica Teorica', // Titto Thug Life
+        'a Fondamenti di Informatica', // Miola beve
+        'a Analisi Matematica', // Natalini
+        'a Sicurezza informatica e delle Reti'  // Pizzonia
+    ];
+    text_message += sticker_message[rand_sticker_number] + ' sarà: ';
+    return text_message;
 }
 
 /*
