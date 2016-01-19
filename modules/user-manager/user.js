@@ -40,6 +40,8 @@ User.prototype.update = function (update) {
     return this.collection.updateOne({telegramId: this.telegramId}, {$set: update});
 };
 
+
+
 /**
  * Access to Database and return the User Object if found else null
  *
