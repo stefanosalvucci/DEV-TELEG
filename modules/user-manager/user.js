@@ -40,7 +40,14 @@ User.prototype.update = function (update) {
     return this.collection.updateOne({telegramId: this.telegramId}, {$set: update});
 };
 
-
+User.prototype.setLives = function(msg,telegramBot) {
+    console.log("entra");
+    console.log(telegramBot);
+    db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user){
+          db.collection('users').updateOne({telegramId: user.telegramId}, {$set: {lives: user.lives+1}});
+          this.telegramBot.sendMessage(msg.chat.id, "Grazie per aver aggiunto un'amico! Hai ottenuto una vita!");
+    });
+}
 
 /**
  * Access to Database and return the User Object if found else null

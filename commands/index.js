@@ -1,4 +1,4 @@
-        const CHAT_GROUP_ID = -69948627;
+const CHAT_GROUP_ID = -69948627;
 
 'use strict';
 
@@ -9,7 +9,6 @@ var dipartimenti = require('../modules/dipartimenti');
 var User = require('../modules/user-manager').User;
 var errors = require('../lib/errors');
 var db = require('../modules/database').db;
-
 
 
 var handleError = function (err, msg, telegramBot) {
@@ -47,6 +46,7 @@ function start_action(msg, telegramBot) {
 commands.on('/start', function (msg, telegramBot) {
     var user = new User(msg.from.id, telegramBot, msg.from.first_name, msg.from.last_name, msg.from.username);
     start_action(msg,telegramBot);
+    console.log(telegramBot);
     user.collection.find({telegramId: user.telegramId}).limit(1).next().then(function (User) {
         (User===null) && user.addToDb();
     });
@@ -139,16 +139,7 @@ commands.on('/claim', function (msg, telegramBot) {
     }else{
         text_message = "Solo in privato posso rivelarti chi ha scritto il messaggio";
     }
-
     telegramBot.sendMessage(msg.chat.id, text_message);
-
-    /*if (isAccepted) {
-        telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
-    }
-    else {
-        telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
-        isAccepted = true;
-    } */
 });
 
 commands.on('/sendClaim', function (msg, telegramBot) {

@@ -1,10 +1,10 @@
 const CHAT_GROUP_ID = -69948627;
 //const CHAT_GROUP_ID = -108401361;
 
-
 'use strict';
 
 var db = require('../database').db;
+var telegramBot = require('../../node_modules/node-telegram-bot-api');
 
 var ConversationLogger = function () {
     this.conversationCollection = db.collection('conversations');
@@ -42,28 +42,43 @@ ConversationLogger.prototype.sniff = function (msg) {
 /* Salvo sulla collection del gruppo Insulted/Spotted Roma Tre */
 ConversationLogger.prototype.sniffInfoGruppo = function (msg){
   var that = this;
-  (msg.chat.id===CHAT_GROUP_ID) && this.groupCollection.insertOne({
+  if(msg.chat.id===CHAT_GROUP_ID) {
+    this.groupCollection.insertOne({
     Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
     Data: new Date(msg.date*1000).toLocaleString(),
     Messaggio: msg.text,
     Message_ID: msg.message_id
-  });
-  if(msg.new_chat_participant != null){
-    // Aggiunge al DB l'utente aggiunto al gruppo
-    this.usersCollection.find({telegramId: msg.new_chat_participant.id}).limit(1).next().then(function(user){
-      if(user == null) {
-        that.usersCollection.insertOne({
-          telegramId: msg.new_chat_participant.id,
-          firstName: msg.new_chat_participant.first_name,
-          lastName: msg.new_chat_participant.last_name,
-          username: msg.new_chat_participant.username,
-          lives: 3,
-          hasAccepted: false
-        });
-      }
-    })
+    });
+    if(msg.new_chat_participant != null){
+      // Aggiunge al DB l'utente aggiunto al gruppo, e aggiungo una vita all'utente che ha aggiunto la persona 
+      this.usersCollection.find({telegramId: msg.new_chat_participant.id}).limit(1).next().then(function(user){
+        if(user == null) {
+          /* aggiungo una vita */
+          addLives(msg,telegramBot);
+          /* aggiungo il nuovo utente */
+          that.usersCollection.insertOne({
+            telegramId: msg.new_chat_participant.id,
+            firstName: msg.new_chat_participant.first_name,
+            lastName: msg.new_chat_participant.last_name,
+            username: msg.new_chat_participant.username,
+            lives: 3,
+            hasAccepted: false
+          });
+        }
+      })
+    }
   }
 };
+
+/* Aggiunge una vita allo User */
+var addLives = function (msg,telegramBot) {
+  console.log("entra");
+  console.log(this.telegramBot);
+  db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user){
+      db.collection('users').updateOne({telegramId: user.telegramId}, {$set: {lives: user.lives+1}});
+      this.telegramBot.sendMessage(msg.chat.id, "Grazie per aver aggiunto un'amico! Hai ottenuto una vita!");
+    });
+} 
 
 /* Salvo sulla collection privata */
 ConversationLogger.prototype.sniffInfoPrivato = function (msg){
