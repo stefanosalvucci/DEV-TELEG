@@ -60,7 +60,7 @@ commands.on('/accept', function (msg, telegramBot) {
         else {    
             if(user.hasAccepted) {
                 telegramBot.sendMessage(msg.chat.id, "Hai già accettato! Ecco la lista delle cose che puoi chiedermi:\n\n" + listaComandi);
-            }    
+            }
             else {
                 telegramBot.sendMessage(msg.chat.id, 'Grazie per aver accettato! Ecco la lista delle cose che puoi chiedermi:\n\n' + listaComandi);
                 setAccepted(msg.chat.id);
