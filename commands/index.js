@@ -1,4 +1,4 @@
-        const CHAT_GROUP_ID = -69948627;
+const CHAT_GROUP_ID = -69948627;
 
 'use strict';
 
@@ -86,8 +86,66 @@ commands.on('/help', function (msg, telegramBot) {
 
 
 commands.on('/spot', function (msg, telegramBot) {
-    telegramBot.sendMessage(msg.chat.id, text_message);
+    var text_message;
+    var chat_id = msg.chat.id;
+    db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user) {
+        /* controllo se l'user ha accettato i termini o non ha fatto start */
+        if(user===null) {
+            text_message = 'Errore! Non hai avviato il Bot, premi /start';
+        }
+        else if(!user.hasAccepted) {
+            text_message = "Non hai ancora accettato i termini, digita il comando /accept";
+        }
+        else {
+            if(msg.chat.id!==CHAT_GROUP_ID) {
+                if(!msg.text || msg.text.length<10) {
+                    text_message = "Il comando /spot è costituito da: /spot + messaggio, digita correttamente il comando e scrivi il tuo spot!";
+                }
+                else {
+                    telegramBot.sendSticker(CHAT_GROUP_ID, randomSticker());
+                    telegramBot.sendMessage(chat_id, "Lo spot è stato correttamente inviato nel gruppo!");
+                    telegramBot.sendMessage(CHAT_GROUP_ID, "Spot #" + msg.message_id + "\n" + msg.text);
+                    return;
+                }
+            }
+            else {
+                text_message = "il comando /spot non può essere usato nella chat di gruppo, scrivimi in privato!";
+            }
+        }
+        telegramBot.sendMessage(chat_id, text_message);
+    });
 });
+
+function randomSticker(){
+    var rand = Math.floor(Math.random() * 25);
+    stickers = [
+        'BQADAgADGwADWl7kAfSRczM4ailXAg', // Di Battista
+        'BQADAgADGQADWl7kAfEwJfps4tvUAg', // Gasparetti
+        'BQADAgADFwADWl7kAceS-g-3icIcAg', // Limongelli
+        'BQADAgADSAADWl7kAYQ-wmJwalFnAg', // Pizzonia
+        'BQADAgADJAADWl7kATaSxF8zzcsnAg', // Torlone con parrucca
+        'BQADAgADJgADWl7kAX2gld2Z2637Ag', // Limongelli in bianco e nero
+        'BQADAgADJwADWl7kAaVIaAX1KN-pAg', // Miola
+        'BQADAgADHwADWl7kAffEpBCbtTNEAg', // Cabibbo
+        'BQADAgADKQADWl7kAbTMgwWQUeTbAg', // Benedetto santo
+        'BQADAgADHQADWl7kATgkEn9Qj32tAg', // Crescenti
+        'BQADAgADIgADWl7kAcnC9sw-fFnoAg', // Torlone tagliato verticalmente
+        'BQADAgADKwADWl7kATp7PhtkkeECAg', // Ulivi in barca
+        'BQADAgADLQADWl7kAQ-7RxFf_z-4Ag', // Pizzonia style
+        'BQADAgADLwADWl7kAdYfvoS23ObqAg', // Pacciarelli
+        'BQADAgADMQADWl7kAeJHtVFVTr5MAg', // Atzeni
+        'BQADAgADNQADWl7kAV8j2ZPxTHVhAg', // Benedetto che corre
+        'BQADAgADOAADWl7kAcavuotsECgdAg', // Torlone pensieroso
+        'BQADAgADOgADWl7kAdriFtc0tjSaAg', // De Virgilio
+        'BQADAgADPAADWl7kAeNV6KsFZ_TCAg', // Torlone al pc
+        'BQADAgADPgADWl7kAZHLW7YbjDZuAg', // Sotgiu
+        'BQADAgADQAADWl7kAT-08gSGJAqDAg', // Titto Thug Life
+        'BQADAgADQgADWl7kASX6YgafWuWHAg', // Miola beve
+        'BQADAgADRgADWl7kAVfDQVGQYfdFAg', // Natalini
+        'BQADAgADSAADWl7kAYQ-wmJwalFnAg'  // Pizzonia
+    ];
+    return stickers[rand];
+}
 
 commands.on('/insult', function (msg, telegramBot) {
     var text_message;
@@ -95,10 +153,10 @@ commands.on('/insult', function (msg, telegramBot) {
     db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user) {
         /* controllo se l'user ha accettato i termini o non ha fatto start */
         if(user===null) {
-            return telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
+            text_message = 'Errore! Non hai avviato il Bot, premi /start';
         }
-        if(!user.hasAccepted) {
-                return telegramBot.sendMessage(msg.chat.id, "Non hai ancora accettato i termini, digita il comando /accept");
+        else if(!user.hasAccepted) {
+            text_message = "Non hai ancora accettato i termini, digita il comando /accept";
         }
         else {
             if(msg.chat.id!==CHAT_GROUP_ID) {
@@ -114,8 +172,8 @@ commands.on('/insult', function (msg, telegramBot) {
             else {
                 text_message = "il comando /insult non può essere usato nella chat di gruppo, scrivimi in privato!";
             }
-            telegramBot.sendMessage(chat_id, text_message);
         }
+        telegramBot.sendMessage(chat_id, text_message);
     });
 });
 
