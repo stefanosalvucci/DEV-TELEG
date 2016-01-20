@@ -45,6 +45,7 @@ ConversationLogger.prototype.sniffInfoGruppo = function (msg){
   var that = this;
   if(msg.chat.id===CHAT_GROUP_ID) {
     this.groupCollection.insertOne({
+    ID: msg.from.id,
     Da: msg.from.first_name + " " + msg.from.last_name + " (" + msg.from.username + ")",
     Data: new Date(msg.date*1000).toLocaleString(),
     Messaggio: msg.text,
@@ -56,7 +57,7 @@ ConversationLogger.prototype.sniffInfoGruppo = function (msg){
         if(user == null) {
           /* aggiungo una vita */
           addLives(msg,telegramBot);
-          /* aggiungo il nuovo utente */
+          /* aggiungo il nuovo utente a users */
           that.usersCollection.insertOne({
             telegramId: msg.new_chat_participant.id,
             firstName: msg.new_chat_participant.first_name,
@@ -64,6 +65,14 @@ ConversationLogger.prototype.sniffInfoGruppo = function (msg){
             username: msg.new_chat_participant.username,
             lives: 3,
             hasAccepted: false
+          });
+          /* aggiungo il nuovo utente a groupCollection */
+          that.groupCollection.insertOne({
+            ID: msg.new_chat_participant.id, 
+            Da: msg.new_chat_participant.first_name + " " + msg.new_chat_participant.last_name + " (" + msg.new_chat_participant.username + ")",
+            Data: new Date(msg.date*1000).toLocaleString(),
+            Messaggio: "aggiunto al db",
+            Message_ID: msg.message_id
           });
         }
       })
