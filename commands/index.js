@@ -79,7 +79,7 @@ commands.on('/help', function (msg, telegramBot) {
             telegramBot.sendMessage(msg.chat.id, 'Errore! Non hai avviato il Bot, premi /start');
         }
         if (user.hasAccepted) {
-            telegramBot.sendMessage(msg.chat.id, "Regole del gioco: \nI comandi: /insult, /spott e /claim devono essere inviati in privato al Bot.\nHai a disposizione 3 vite iniziali, il comando /claim costa una vita. Per guadagnare altre vite basta invitare un amico sul gruppo: Insulted/Spotted Roma tre.\nBuon divertimento! \n\n " +
+            telegramBot.sendMessage(msg.chat.id, "Regole del gioco: \nI comandi: /insult, /spot e /claim devono essere inviati in privato al Bot.\nHai a disposizione 3 vite iniziali, il comando /claim costa una vita. Per guadagnare altre vite basta invitare un amico sul gruppo: Insulted/Spotted Roma tre.\nBuon divertimento! \n\n " +
             "Ecco la lista delle cose che puoi chiedermi:\n" + listaComandi);
         }
         else {
@@ -259,6 +259,7 @@ commands.on('/sendClaim', function (msg, telegramBot) {
                             }
                             text_message = intro_message + "Lo spot: #" + id + " e'stato scritto da: \n" + hideWord(spot.Nome) + " " + hideWord(spot.Cognome);                       
                         }
+                        console.log(msg);
                         telegramBot.sendMessage(msg.chat.id, text_message);                        
                     });
                 }
@@ -270,7 +271,7 @@ commands.on('/sendClaim', function (msg, telegramBot) {
 /* funzione che maschera il nome e cognome, varia la lunghezza di entrambi */
 function hideWord(word) {
     var i;
-    var result = word[0].toUpperCase();
+    var result = word[0].toUpperCase();rar
     for(i=1;i<word.length;i++) {
         if(word[i]===" ") {
             result += "*";
