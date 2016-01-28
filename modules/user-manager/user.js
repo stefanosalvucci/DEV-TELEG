@@ -1,7 +1,7 @@
 'use strict';
 
 var database = require('../database').db;
-var speaker = require('../speaker');
+//var speaker = require('../speaker');
 
 /**
  * Create or get a new User.
@@ -18,31 +18,12 @@ var User = function (telegramId, telegramBot, firstName, lastName, username) {
     this.collection = database.collection('users');
 };
 
-/**
- * Get the user dipartimento. If it's undefined ask the user for it.
- * @returns {Promise}
- */
-User.prototype.getDipartimento = function () {
-    var that = this;
-    return this.getUser().then(function (user) {
-        if (!user['dipartimentoId']) {
-            return speaker.ask('dipartimento', that.telegramId, that.telegramBot).then(function (dipartimentoId) {
-                return that.update({dipartimentoId: dipartimentoId}).then(function () {
-                    return Promise.resolve(dipartimentoId);
-                });
-            });
-        }
-        return Promise.resolve(user.dipartimentoId);
-    });
-};
 
 User.prototype.update = function (update) {
     return this.collection.updateOne({telegramId: this.telegramId}, {$set: update});
 };
 
 User.prototype.setLives = function(msg,telegramBot) {
-    console.log("entra");
-    console.log(telegramBot);
     db.collection('users').find({telegramId: msg.from.id}).limit(1).next().then(function(user){
           db.collection('users').updateOne({telegramId: user.telegramId}, {$set: {lives: user.lives+1}});
           this.telegramBot.sendMessage(msg.chat.id, "Grazie per aver aggiunto un'amico! Hai ottenuto una vita!");
@@ -76,7 +57,9 @@ User.prototype.getUser = function () {
  * @returns {Promise}
  */
 User.prototype.forget = function () {
-    return this.collection.removeOne({telegramId: this.telegramId});
+    console.log("eccomi");
+    console.log(this.collection);
+    return this.collection.updateOne({telegramId: this.telegramId}, {$set: {hasAccepted: false}});
 };
 
 /**

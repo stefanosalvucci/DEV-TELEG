@@ -1,18 +1,18 @@
 {
-  "aulelibere": [
-    "quali sono le aule libere",
-    "quali sono le aule vuote",
-    "aule libere",
-    "aule per studiare",
-    "quali sono le aule per studiare",
-    "aula libera",
-    "dove posso andare a studiare"
+  "vote": [
+    "vota",
+    "voti",
+    "vote",
+    "voto"
   ],
-  "lezioni": [
-    "lezioni",
-    "che lezioni ho oggi",
-    "lezioni di oggi"
+  
+  "help": [
+    "aiuto",
+    "aiutami",
+    "help",
+    "aiuta"
   ],
+
   "cometichiami": [
     "come ti chiami",
     "qual è il tuo nome"
@@ -22,15 +22,18 @@
     "grazie mille",
     "grazie tante"
   ],
+
   "start": [
     "ciao",
     "salve",
     "buongiorno",
     "ave cesare"
   ],
+  
   "default": [
     "tutto bene",
     "tutto apposto",
+    "non lo so",
     "come va",
     "come stai"
   ]

